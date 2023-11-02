@@ -1,3 +1,4 @@
+import os
 import numpy as np
 import tensorflow as tf
 import keras
@@ -27,7 +28,7 @@ class MultiModels:
     
     def loadDeerModel(self):
         """Loads the Deer Classification Model"""
-        self.deerModel = keras.models.load_model('deerModel.keras')
+        self.currentModel = keras.models.load_model('../models/deerModel.keras')
     
     def predictDeerModel(self, img):
         """
@@ -38,7 +39,7 @@ class MultiModels:
         pictureArray = img_to_array(testPicture)
         pictureArray = pictureArray.reshape((1, pictureArray.shape[0], pictureArray.shape[1], pictureArray.shape[2]))
         pictureArray = preprocess_input(pictureArray)
-        prediction = self.deerModel.predict(pictureArray)
+        prediction = self.currentModel.predict(pictureArray)
         # print (prediction)
         self.testResults['deer'] = (prediction[0][0])
 
@@ -46,7 +47,7 @@ class MultiModels:
         """
         Loads the Squirrel Classification Model
         """
-        self.squirrelModel = keras.models.load_model('squirrelModel.keras')
+        self.currentModel = keras.models.load_model('../models/squirrelModel.keras')
     
     def predictSquirrelModel(self, img):
         """
@@ -57,7 +58,7 @@ class MultiModels:
         pictureArray = img_to_array(testPicture)
         pictureArray = pictureArray.reshape((1, pictureArray.shape[0], pictureArray.shape[1], pictureArray.shape[2]))
         pictureArray = preprocess_input(pictureArray)
-        prediction = self.squirrelModel.predict(pictureArray)
+        prediction = self.currentModel.predict(pictureArray)
         # print (prediction)
         self.testResults['squirrel'] = (prediction[0][0])
     
@@ -65,7 +66,7 @@ class MultiModels:
         """
         Loads the Rabbit Classification Model
         """
-        self.rabbitModel = keras.models.load_model('rabbitModel.keras')
+        self.currentModel = keras.models.load_model('../models/rabbitModel.keras')
     
     def predictRabbitModel(self, img):
         """
@@ -76,7 +77,7 @@ class MultiModels:
         pictureArray = img_to_array(testPicture)
         pictureArray = pictureArray.reshape((1, pictureArray.shape[0], pictureArray.shape[1], pictureArray.shape[2]))
         pictureArray = preprocess_input(pictureArray)
-        prediction = self.rabbitModel.predict(pictureArray)
+        prediction = self.currentModel.predict(pictureArray)
         # print (prediction)
         self.testResults['rabbit'] = (prediction[0][0])
 
@@ -84,7 +85,7 @@ class MultiModels:
         """
         Loads the Fox Classification Model
         """
-        self.foxModel = keras.models.load_model('foxModel.keras')
+        self.currentModel = keras.models.load_model('../models/foxModel.keras')
     
     def predictFoxModel(self, img):
         """
@@ -95,15 +96,75 @@ class MultiModels:
         pictureArray = img_to_array(testPicture)
         pictureArray = pictureArray.reshape((1, pictureArray.shape[0], pictureArray.shape[1], pictureArray.shape[2]))
         pictureArray = preprocess_input(pictureArray)
-        prediction = self.foxModel.predict(pictureArray)
+        prediction = self.currentModel.predict(pictureArray)
         # print (prediction)
         self.testResults['fox'] = (prediction[0][0])
+
+    def loadDogModel(self):
+        """
+        Loads the Dog Classification Model
+        """
+        self.currentModel = keras.models.load_model('../models/dogModel.keras')
+    
+    def predictDogModel(self, img):
+        """
+        Predicts liklihood of a Dod
+        @Param: the image to predict on
+        """
+        testPicture = load_img(img, target_size=(224,224))
+        pictureArray = img_to_array(testPicture)
+        pictureArray = pictureArray.reshape((1, pictureArray.shape[0], pictureArray.shape[1], pictureArray.shape[2]))
+        pictureArray = preprocess_input(pictureArray)
+        prediction = self.currentModel.predict(pictureArray)
+        # print (prediction)
+        self.testResults['dog'] = (prediction[0][0])
+
+    def loadCatModel(self):
+        """
+        Loads the cat Classification Model
+        """
+        self.currentModel = keras.models.load_model('../models/catModel.keras')
+    
+    def predictCatModel(self, img):
+        """
+        Predicts liklihood of a Cat
+        @Param: the image to predict on
+        """
+        testPicture = load_img(img, target_size=(224,224))
+        pictureArray = img_to_array(testPicture)
+        pictureArray = pictureArray.reshape((1, pictureArray.shape[0], pictureArray.shape[1], pictureArray.shape[2]))
+        pictureArray = preprocess_input(pictureArray)
+        prediction = self.currentModel.predict(pictureArray)
+        # print (prediction)
+        self.testResults['cat'] = (prediction[0][0])
+    
+    def loadCoyoteModel(self):
+        """
+        Loads the Coyote Classification Model
+        """
+        self.currentModel = keras.models.load_model('../models/coyoteModel.keras')
+    
+    def predictCoyoteModel(self, img):
+        """
+        Predicts liklihood of a Coyote
+        @Param: the image to predict on
+        """
+        testPicture = load_img(img, target_size=(224,224))
+        pictureArray = img_to_array(testPicture)
+        pictureArray = pictureArray.reshape((1, pictureArray.shape[0], pictureArray.shape[1], pictureArray.shape[2]))
+        pictureArray = preprocess_input(pictureArray)
+        prediction = self.currentModel.predict(pictureArray)
+        # print (prediction)
+        self.testResults['coyote'] = (prediction[0][0])
     
     def predictAll(self, img):
         """
         Predicts liklihood of all animals
         @Param: the image to predict on
         """
+        self.testResults = {'deer' : 0, 'squirrel' : 0, 'mouse' : 0, 'fox' : 0, 'coyote' : 0, 'dog' : 0, 'cat' : 0,
+                            'rabbit' : 0, 'weasel' : 0,}
+
         self.loadDeerModel()
         self.predictDeerModel(img)
         self.loadSquirrelModel()
@@ -112,6 +173,12 @@ class MultiModels:
         self.predictRabbitModel(img)
         self.loadFoxModel()
         self.predictFoxModel(img)
+        self.loadDogModel()
+        self.predictDogModel(img)
+        self.loadCatModel()
+        self.predictCatModel(img)
+        self.loadCoyoteModel()
+        self.predictCoyoteModel(img)
     
     def displayPredictions(self):
         """
@@ -129,9 +196,34 @@ class MultiModels:
         
 def main():
     allModels = MultiModels()
-    allModels.predictAll('extraTest/testSquirrel/97.jpg___crop01_md_v5a.0.0.pt.jpg')
+    allModels.predictAll('../deerNightCrop.jpg')
     allModels.displayPredictions()
     print(allModels.mostLikelyAnimal())
+
+    # results = [0, 0, 0, 0, 0, 0, 0]
+    # directory = 'extraTest/testDeer'
+    # for filename in os.listdir(directory):
+    #     f = os.path.join(directory, filename)
+    #     if os.path.isfile(f):
+    #         print(f)
+    #         allModels.predictAll('../deerNightCrop.jpg')
+    #         # allModels.displayPredictions()
+    #         animal = allModels.mostLikelyAnimal()
+    #         if animal == 'cat':
+    #             results[0] += 1
+    #         elif animal == 'coyote':
+    #             results[1] += 1
+    #         elif animal == 'deer':
+    #             results[2] += 1
+    #         elif animal == 'dog':
+    #             results[3] += 1
+    #         elif animal == 'fox':
+    #             results[4] += 1
+    #         elif animal == 'rabbit':
+    #             results[5] += 1
+    #         elif animal == 'squirrel':
+    #             results[6] += 1
+        
 
 
 if __name__ == "__main__":
