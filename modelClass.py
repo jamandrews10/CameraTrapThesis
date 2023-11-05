@@ -184,8 +184,9 @@ class MultiModels:
         """
         Displays the Dictrionary with the predictions
         """
-        for item in self.testResults:
-            print(item, " : ", self.testResults[item])
+        return self.testResults
+        # for item in self.testResults:
+            # print(item, " : ", self.testResults[item])
 
     def mostLikelyAnimal(self):
         """
@@ -196,34 +197,255 @@ class MultiModels:
         
 def main():
     allModels = MultiModels()
-    allModels.predictAll('../deerNightCrop.jpg')
-    allModels.displayPredictions()
-    print(allModels.mostLikelyAnimal())
+    # allModels.predictAll('../deerNightCrop.jpg')
+    # allModels.displayPredictions()
+    # print(allModels.mostLikelyAnimal())
 
-    # results = [0, 0, 0, 0, 0, 0, 0]
-    # directory = 'extraTest/testDeer'
-    # for filename in os.listdir(directory):
-    #     f = os.path.join(directory, filename)
-    #     if os.path.isfile(f):
-    #         print(f)
-    #         allModels.predictAll('../deerNightCrop.jpg')
-    #         # allModels.displayPredictions()
-    #         animal = allModels.mostLikelyAnimal()
-    #         if animal == 'cat':
-    #             results[0] += 1
-    #         elif animal == 'coyote':
-    #             results[1] += 1
-    #         elif animal == 'deer':
-    #             results[2] += 1
-    #         elif animal == 'dog':
-    #             results[3] += 1
-    #         elif animal == 'fox':
-    #             results[4] += 1
-    #         elif animal == 'rabbit':
-    #             results[5] += 1
-    #         elif animal == 'squirrel':
-    #             results[6] += 1
-        
+    outputFile = open("outputFile.txt", "a")
+    i = 0
+    #cat, coyote, deer, dog, fox, rabbit, squirrel
+    outputFile.write("Cats: \n")
+    results = [0, 0, 0, 0, 0, 0, 0]
+    directory = 'extraTest/testCat'
+    for filename in os.listdir(directory):
+        f = os.path.join(directory, filename)
+        if os.path.isfile(f):
+            outputFile.write(str(i))
+            outputFile.write(": ")
+            outputFile.write(str(f))
+            outputFile.write("\n")
+            allModels.predictAll(f)
+            outputFile.write(str(allModels.displayPredictions()))
+            outputFile.write("\n\n")
+            animal = allModels.mostLikelyAnimal()
+            if animal == 'cat':
+                results[0] += 1
+            elif animal == 'coyote':
+                results[1] += 1
+            elif animal == 'deer':
+                results[2] += 1
+            elif animal == 'dog':
+                results[3] += 1
+            elif animal == 'fox':
+                results[4] += 1
+            elif animal == 'rabbit':
+                results[5] += 1
+            elif animal == 'squirrel':
+                results[6] += 1
+        i += 1
+    outputFile.write("Cat Results: ")
+    outputFile.write(str(results))
+    outputFile.write("\n")
+
+    i = 0
+    #cat, coyote, deer, dog, fox, rabbit, squirrel
+    outputFile.write("Coyotes: \n")
+    results = [0, 0, 0, 0, 0, 0, 0]
+    directory = 'extraTest/testCoyote'
+    for filename in os.listdir(directory):
+        f = os.path.join(directory, filename)
+        if os.path.isfile(f):
+            outputFile.write(str(i))
+            outputFile.write(": ")
+            outputFile.write(str(f))
+            outputFile.write("\n")
+            allModels.predictAll(f)
+            outputFile.write(str(allModels.displayPredictions()))
+            outputFile.write("\n\n")
+            animal = allModels.mostLikelyAnimal()
+            if animal == 'cat':
+                results[0] += 1
+            elif animal == 'coyote':
+                results[1] += 1
+            elif animal == 'deer':
+                results[2] += 1
+            elif animal == 'dog':
+                results[3] += 1
+            elif animal == 'fox':
+                results[4] += 1
+            elif animal == 'rabbit':
+                results[5] += 1
+            elif animal == 'squirrel':
+                results[6] += 1
+        i += 1
+        outputFile.write("Coyote Results: ")
+        outputFile.write(str(results))
+        outputFile.write("\n")
+
+    i = 0
+    #cat, coyote, deer, dog, fox, rabbit, squirrel
+    outputFile.write("Deer: \n")
+    results = [0, 0, 0, 0, 0, 0, 0]
+    directory = 'extraTest/testDeer'
+    for filename in os.listdir(directory):
+        f = os.path.join(directory, filename)
+        if os.path.isfile(f):
+            outputFile.write(str(i))
+            outputFile.write(": ")
+            outputFile.write(str(f))
+            outputFile.write("\n")
+            allModels.predictAll(f)
+            outputFile.write(str(allModels.displayPredictions()))
+            outputFile.write("\n\n")
+            animal = allModels.mostLikelyAnimal()
+            if animal == 'cat':
+                results[0] += 1
+            elif animal == 'coyote':
+                results[1] += 1
+            elif animal == 'deer':
+                results[2] += 1
+            elif animal == 'dog':
+                results[3] += 1
+            elif animal == 'fox':
+                results[4] += 1
+            elif animal == 'rabbit':
+                results[5] += 1
+            elif animal == 'squirrel':
+                results[6] += 1
+        i += 1
+    outputFile.write("Deer Results: ")
+    outputFile.write(str(results))
+    outputFile.write("\n")
+
+    i = 0
+    #cat, coyote, deer, dog, fox, rabbit, squirrel
+    outputFile.write("Dogs: \n")
+    results = [0, 0, 0, 0, 0, 0, 0]
+    directory = 'extraTest/testDog'
+    for filename in os.listdir(directory):
+        f = os.path.join(directory, filename)
+        if os.path.isfile(f):
+            outputFile.write(str(i))
+            outputFile.write(": ")
+            outputFile.write(str(f))
+            outputFile.write("\n")
+            allModels.predictAll(f)
+            outputFile.write(str(allModels.displayPredictions()))
+            outputFile.write("\n\n")
+            animal = allModels.mostLikelyAnimal()
+            if animal == 'cat':
+                results[0] += 1
+            elif animal == 'coyote':
+                results[1] += 1
+            elif animal == 'deer':
+                results[2] += 1
+            elif animal == 'dog':
+                results[3] += 1
+            elif animal == 'fox':
+                results[4] += 1
+            elif animal == 'rabbit':
+                results[5] += 1
+            elif animal == 'squirrel':
+                results[6] += 1
+        i += 1
+    outputFile.write("Dog Results: ")
+    outputFile.write(str(results))
+    outputFile.write("\n")
+
+    i = 0
+    #cat, coyote, deer, dog, fox, rabbit, squirrel
+    outputFile.write("Fox: \n")
+    results = [0, 0, 0, 0, 0, 0, 0]
+    directory = 'extraTest/testFox'
+    for filename in os.listdir(directory):
+        f = os.path.join(directory, filename)
+        if os.path.isfile(f):
+            outputFile.write(str(i))
+            outputFile.write(": ")
+            outputFile.write(str(f))
+            outputFile.write("\n")
+            allModels.predictAll(f)
+            outputFile.write(str(allModels.displayPredictions()))
+            outputFile.write("\n\n")
+            animal = allModels.mostLikelyAnimal()
+            if animal == 'cat':
+                results[0] += 1
+            elif animal == 'coyote':
+                results[1] += 1
+            elif animal == 'deer':
+                results[2] += 1
+            elif animal == 'dog':
+                results[3] += 1
+            elif animal == 'fox':
+                results[4] += 1
+            elif animal == 'rabbit':
+                results[5] += 1
+            elif animal == 'squirrel':
+                results[6] += 1
+        i += 1
+    outputFile.write("Fox Results: ")
+    outputFile.write(str(results))
+    outputFile.write("\n")
+
+    i = 0
+    #cat, coyote, deer, dog, fox, rabbit, squirrel
+    outputFile.write("Rabbit: \n")
+    results = [0, 0, 0, 0, 0, 0, 0]
+    directory = 'extraTest/testRabbit'
+    for filename in os.listdir(directory):
+        f = os.path.join(directory, filename)
+        if os.path.isfile(f):
+            outputFile.write(str(i))
+            outputFile.write(": ")
+            outputFile.write(str(f))
+            outputFile.write("\n")
+            allModels.predictAll(f)
+            outputFile.write(str(allModels.displayPredictions()))
+            outputFile.write("\n\n")
+            animal = allModels.mostLikelyAnimal()
+            if animal == 'cat':
+                results[0] += 1
+            elif animal == 'coyote':
+                results[1] += 1
+            elif animal == 'deer':
+                results[2] += 1
+            elif animal == 'dog':
+                results[3] += 1
+            elif animal == 'fox':
+                results[4] += 1
+            elif animal == 'rabbit':
+                results[5] += 1
+            elif animal == 'squirrel':
+                results[6] += 1
+        i += 1
+    outputFile.write("Rabbit Results: ")
+    outputFile.write(str(results))
+    outputFile.write("\n")
+
+    i = 0
+    #cat, coyote, deer, dog, fox, rabbit, squirrel
+    outputFile.write("Squirrel: \n")
+    results = [0, 0, 0, 0, 0, 0, 0]
+    directory = 'extraTest/testSquirrel'
+    for filename in os.listdir(directory):
+        f = os.path.join(directory, filename)
+        if os.path.isfile(f):
+            outputFile.write(str(i))
+            outputFile.write(": ")
+            outputFile.write(str(f))
+            outputFile.write("\n")
+            allModels.predictAll(f)
+            outputFile.write(str(allModels.displayPredictions()))
+            outputFile.write("\n\n")
+            animal = allModels.mostLikelyAnimal()
+            if animal == 'cat':
+                results[0] += 1
+            elif animal == 'coyote':
+                results[1] += 1
+            elif animal == 'deer':
+                results[2] += 1
+            elif animal == 'dog':
+                results[3] += 1
+            elif animal == 'fox':
+                results[4] += 1
+            elif animal == 'rabbit':
+                results[5] += 1
+            elif animal == 'squirrel':
+                results[6] += 1
+        i += 1
+    outputFile.write("Squirrel Results: ")
+    outputFile.write(str(results))
+    outputFile.write("\n")
 
 
 if __name__ == "__main__":
