@@ -175,6 +175,25 @@ class MultiModels:
         prediction = self.currentModel.predict(pictureArray)
         # print (prediction)
         self.testResults['weasel'] = (prediction[0][0])
+
+    def loadMouseModel(self):
+        """
+        Loads the Weasel Classification Model
+        """
+        self.currentModel = keras.models.load_model('../models/mouseModel.keras')
+    
+    def predictMouseModel(self, img):
+        """
+        Predicts liklihood of a Weasel
+        @Param: the image to predict on
+        """
+        testPicture = load_img(img, target_size=(224,224))
+        pictureArray = img_to_array(testPicture)
+        pictureArray = pictureArray.reshape((1, pictureArray.shape[0], pictureArray.shape[1], pictureArray.shape[2]))
+        pictureArray = preprocess_input(pictureArray)
+        prediction = self.currentModel.predict(pictureArray)
+        # print (prediction)
+        self.testResults['mouse'] = (prediction[0][0])
     
     def predictAll(self, img):
         """
@@ -200,6 +219,8 @@ class MultiModels:
         self.predictCoyoteModel(img)
         self.loadWeaselModel()
         self.predictWeaselModel(img)
+        self.loadMouseModel()
+        self.predictMouseModel(img)
     
     def displayPredictions(self):
         """
@@ -226,7 +247,7 @@ def main():
     i = 0
     #cat, coyote, deer, dog, fox, rabbit, squirrel
     # outputFile.write("Cats: \n")
-    # results = [0, 0, 0, 0, 0, 0, 0, 0]
+    # results = [0, 0, 0, 0, 0, 0, 0, 0, 0]
     # directory = 'extraTest/testCat'
     # for filename in os.listdir(directory):
     #     f = os.path.join(directory, filename)
@@ -249,12 +270,14 @@ def main():
     #             results[3] += 1
     #         elif animal == 'fox':
     #             results[4] += 1
+    #         elif animal == 'mouse':
+    #             results[5] += 1   
     #         elif animal == 'rabbit':
-    #             results[5] += 1
-    #         elif animal == 'squirrel':
     #             results[6] += 1
-    #         elif animal == 'weasel':
+    #         elif animal == 'squirrel':
     #             results[7] += 1
+    #         elif animal == 'weasel':
+    #             results[8] += 1
     #     i += 1
     # outputFile.write("Cat Results: ")
     # outputFile.write(str(results))
@@ -263,7 +286,7 @@ def main():
     # i = 0
     # #cat, coyote, deer, dog, fox, rabbit, squirrel
     # outputFile.write("Coyotes: \n")
-    # results = [0, 0, 0, 0, 0, 0, 0, 0]
+    # results = [0, 0, 0, 0, 0, 0, 0, 0, 0]
     # directory = 'extraTest/testCoyote'
     # for filename in os.listdir(directory):
     #     f = os.path.join(directory, filename)
@@ -286,12 +309,14 @@ def main():
     #             results[3] += 1
     #         elif animal == 'fox':
     #             results[4] += 1
+    #         elif animal == 'mouse':
+    #             results[5] += 1   
     #         elif animal == 'rabbit':
-    #             results[5] += 1
-    #         elif animal == 'squirrel':
     #             results[6] += 1
-    #         elif animal == 'weasel':
+    #         elif animal == 'squirrel':
     #             results[7] += 1
+    #         elif animal == 'weasel':
+    #             results[8] += 1
     #     i += 1
     # outputFile.write("Coyote Results: ")
     # outputFile.write(str(results))
@@ -300,7 +325,7 @@ def main():
     # i = 0
     # #cat, coyote, deer, dog, fox, rabbit, squirrel
     # outputFile.write("Deer: \n")
-    # results = [0, 0, 0, 0, 0, 0, 0, 0]
+    # results = [0, 0, 0, 0, 0, 0, 0, 0, 0]
     # directory = 'extraTest/testDeer'
     # for filename in os.listdir(directory):
     #     f = os.path.join(directory, filename)
@@ -323,12 +348,14 @@ def main():
     #             results[3] += 1
     #         elif animal == 'fox':
     #             results[4] += 1
+    #         elif animal == 'mouse':
+    #             results[5] += 1   
     #         elif animal == 'rabbit':
-    #             results[5] += 1
-    #         elif animal == 'squirrel':
     #             results[6] += 1
-    #         elif animal == 'weasel':
+    #         elif animal == 'squirrel':
     #             results[7] += 1
+    #         elif animal == 'weasel':
+    #             results[8] += 1
     #     i += 1
     # outputFile.write("Deer Results: ")
     # outputFile.write(str(results))
@@ -337,7 +364,7 @@ def main():
     # i = 0
     # #cat, coyote, deer, dog, fox, rabbit, squirrel
     # outputFile.write("Dogs: \n")
-    # results = [0, 0, 0, 0, 0, 0, 0, 0]
+    # results = [0, 0, 0, 0, 0, 0, 0, 0, 0]
     # directory = 'extraTest/testDog'
     # for filename in os.listdir(directory):
     #     f = os.path.join(directory, filename)
@@ -360,12 +387,14 @@ def main():
     #             results[3] += 1
     #         elif animal == 'fox':
     #             results[4] += 1
+    #         elif animal == 'mouse':
+    #             results[5] += 1   
     #         elif animal == 'rabbit':
-    #             results[5] += 1
-    #         elif animal == 'squirrel':
     #             results[6] += 1
-    #         elif animal == 'weasel':
+    #         elif animal == 'squirrel':
     #             results[7] += 1
+    #         elif animal == 'weasel':
+    #             results[8] += 1
     #     i += 1
     # outputFile.write("Dog Results: ")
     # outputFile.write(str(results))
@@ -374,7 +403,7 @@ def main():
     # i = 0
     # #cat, coyote, deer, dog, fox, rabbit, squirrel
     # outputFile.write("Fox: \n")
-    # results = [0, 0, 0, 0, 0, 0, 0, 0]
+    # results = [0, 0, 0, 0, 0, 0, 0, 0, 0]
     # directory = 'extraTest/testFox'
     # for filename in os.listdir(directory):
     #     f = os.path.join(directory, filename)
@@ -397,12 +426,14 @@ def main():
     #             results[3] += 1
     #         elif animal == 'fox':
     #             results[4] += 1
+    #         elif animal == 'mouse':
+    #             results[5] += 1   
     #         elif animal == 'rabbit':
-    #             results[5] += 1
-    #         elif animal == 'squirrel':
     #             results[6] += 1
-    #         elif animal == 'weasel':
+    #         elif animal == 'squirrel':
     #             results[7] += 1
+    #         elif animal == 'weasel':
+    #             results[8] += 1
     #     i += 1
     # outputFile.write("Fox Results: ")
     # outputFile.write(str(results))
@@ -411,7 +442,7 @@ def main():
     # i = 0
     # #cat, coyote, deer, dog, fox, rabbit, squirrel
     # outputFile.write("Rabbit: \n")
-    # results = [0, 0, 0, 0, 0, 0, 0, 0]
+    # results = [0, 0, 0, 0, 0, 0, 0, 0, 0]
     # directory = 'extraTest/testRabbit'
     # for filename in os.listdir(directory):
     #     f = os.path.join(directory, filename)
@@ -434,12 +465,14 @@ def main():
     #             results[3] += 1
     #         elif animal == 'fox':
     #             results[4] += 1
+    #         elif animal == 'mouse':
+    #             results[5] += 1   
     #         elif animal == 'rabbit':
-    #             results[5] += 1
-    #         elif animal == 'squirrel':
     #             results[6] += 1
-    #         elif animal == 'weasel':
+    #         elif animal == 'squirrel':
     #             results[7] += 1
+    #         elif animal == 'weasel':
+    #             results[8] += 1
     #     i += 1
     # outputFile.write("Rabbit Results: ")
     # outputFile.write(str(results))
@@ -448,7 +481,7 @@ def main():
     # i = 0
     # #cat, coyote, deer, dog, fox, rabbit, squirrel
     # outputFile.write("Squirrel: \n")
-    # results = [0, 0, 0, 0, 0, 0, 0, 0]
+    # results = [0, 0, 0, 0, 0, 0, 0, 0, 0]
     # directory = 'extraTest/testSquirrel'
     # for filename in os.listdir(directory):
     #     f = os.path.join(directory, filename)
@@ -471,22 +504,63 @@ def main():
     #             results[3] += 1
     #         elif animal == 'fox':
     #             results[4] += 1
+    #         elif animal == 'mouse':
+    #             results[5] += 1   
     #         elif animal == 'rabbit':
-    #             results[5] += 1
-    #         elif animal == 'squirrel':
     #             results[6] += 1
-    #         elif animal == 'weasel':
+    #         elif animal == 'squirrel':
     #             results[7] += 1
+    #         elif animal == 'weasel':
+    #             results[8] += 1
     #     i += 1
     # outputFile.write("Squirrel Results: ")
     # outputFile.write(str(results))
     # outputFile.write("\n")
 
+    # i = 0
+    # #cat, coyote, deer, dog, fox, mouse, rabbit, squirrel, weasel
+    # outputFile.write("Weasel: \n")
+    # results = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    # directory = 'extraTest/testWeasel'
+    # for filename in os.listdir(directory):
+    #     f = os.path.join(directory, filename)
+    #     if os.path.isfile(f):
+    #         outputFile.write(str(i))
+    #         outputFile.write(": ")
+    #         outputFile.write(str(f))
+    #         outputFile.write("\n")
+    #         allModels.predictAll(f)
+    #         outputFile.write(str(allModels.displayPredictions()))
+    #         outputFile.write("\n\n")
+    #         animal = allModels.mostLikelyAnimal()
+    #         if animal == 'cat':
+    #             results[0] += 1
+    #         elif animal == 'coyote':
+    #             results[1] += 1
+    #         elif animal == 'deer':
+    #             results[2] += 1
+    #         elif animal == 'dog':
+    #             results[3] += 1
+    #         elif animal == 'fox':
+    #             results[4] += 1
+    #         elif animal == 'mouse':
+    #             results[5] += 1   
+    #         elif animal == 'rabbit':
+    #             results[6] += 1
+    #         elif animal == 'squirrel':
+    #             results[7] += 1
+    #         elif animal == 'weasel':
+    #             results[8] += 1
+    #     i += 1
+    # outputFile.write("Weasel Results: ")
+    # outputFile.write(str(results))
+    # outputFile.write("\n")
+
     i = 0
-    #cat, coyote, deer, dog, fox, rabbit, squirrel, weasel
-    outputFile.write("Weasel: \n")
-    results = [0, 0, 0, 0, 0, 0, 0, 0]
-    directory = 'extraTest/testWeasel'
+    #cat, coyote, deer, dog, fox, mouse, rabbit, squirrel, weasel
+    outputFile.write("Mouse: \n")
+    results = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    directory = 'extraTest/testMouse'
     for filename in os.listdir(directory):
         f = os.path.join(directory, filename)
         if os.path.isfile(f):
@@ -508,14 +582,16 @@ def main():
                 results[3] += 1
             elif animal == 'fox':
                 results[4] += 1
+            elif animal == 'mouse':
+                results[5] += 1   
             elif animal == 'rabbit':
-                results[5] += 1
-            elif animal == 'squirrel':
                 results[6] += 1
-            elif animal == 'weasel':
+            elif animal == 'squirrel':
                 results[7] += 1
+            elif animal == 'weasel':
+                results[8] += 1
         i += 1
-    outputFile.write("Weasel Results: ")
+    outputFile.write("Mouse Results: ")
     outputFile.write(str(results))
     outputFile.write("\n")
 
