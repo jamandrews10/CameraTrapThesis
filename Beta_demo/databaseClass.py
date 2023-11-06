@@ -18,9 +18,12 @@ class DataBase:
         query = QtSql.QSqlQuery()
 
         query.exec("CREATE TABLE paths(ID INTEGER PRIMARY KEY, "
-            "IMAGEPATH TEXT, CROPPEDPATH TEXT, CLASSIFICATION TEXT, CONFIRMED TEXT, CAMERA TEXT, DAYNIGHT TEXT, TAGS TEXT)")
-        
+            "IMAGEPATH TEXT, CROPPEDPATH TEXT, CLASSIFICATION TEXT, CONFIRMED TEXT, CAMERA TEXT, DATETIME TIMESTAMP, DAYNIGHT TEXT, TAGS TEXT)")
+
     def connect(self):
+        """
+        Connects to the database in a given path
+        """
         return sqlite3.connect('beta.db')
     
     def addRow(self, values):
@@ -116,6 +119,7 @@ class DataBase:
         """
         conn = self.connect()
         cursor = conn.execute("SELECT * FROM Paths")
+        print(list(map(lambda x: x[0], cursor.description)))
         sortById = list(map(lambda x: x[0], cursor.description)).index(sortBy.upper())
         output = sorted(rows, key = lambda x: x[sortById], reverse = reversed)
         conn.close()
