@@ -5,10 +5,9 @@ import datetime
 import os
 
 class DataBase:
-    def __init__(self, path = 'beta.db'):
+    def __init__(self):
         self.db = QtSql.QSqlDatabase.addDatabase('QSQLITE')
-        self.db.setDatabaseName(path)
-        self.path = path
+        self.db.setDatabaseName('beta.db')
         if not self.db.open():
             QtGui.QMessageBox.critical(None, QtGui.qApp.tr("Cannot open database"),
             QtGui.qApp.tr("Unable to establish a database connection.\n"
@@ -24,7 +23,7 @@ class DataBase:
             "IMAGEPATH TEXT, CROPPEDPATH TEXT, CLASSIFICATION TEXT, CONFIRMED TEXT, CAMERA TEXT, DATETIME TEXT, DAYNIGHT TEXT, TAGS TEXT)")
         
     def connect(self):
-        return sqlite3.connect(self.path)
+        return sqlite3.connect('beta.db')
     
     def addRow(self, values):
         """
