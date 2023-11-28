@@ -17,12 +17,12 @@ class MultiModels:
         """
         self.testResults = {'cat'      : 0,
                             'coyote'   : 0,
-                            'dog'      : 0,
                             'deer'     : 0,
+                            'dog'      : 0,
                             'fox'      : 0,
                             'mouse'    : 0,
-                            'squirrel' : 0,
                             'rabbit'   : 0,
+                            'squirrel' : 0,
                             'weasel'   : 0,}
                             # Maybe groundhogs
     
@@ -200,8 +200,8 @@ class MultiModels:
         Predicts liklihood of all animals
         @Param: the image to predict on
         """
-        self.testResults = {'cat'      : 0, 'coyote'   : 0, 'dog'      : 0, 'deer'     : 0, 
-                            'fox'      : 0, 'mouse'    : 0, 'squirrel' : 0, 'rabbit'   : 0, 'weasel'   : 0,}
+        self.testResults = {'cat' : 0, 'coyote' : 0, 'deer' : 0, 'dog' : 0, 
+                            'fox' : 0, 'mouse' : 0, 'rabbit' : 0, 'squirrel' : 0, 'weasel' : 0,}
 
         self.loadDeerModel()
         self.predictDeerModel(img)
@@ -217,8 +217,8 @@ class MultiModels:
         self.predictCatModel(img)
         self.loadCoyoteModel()
         self.predictCoyoteModel(img)
-        self.loadWeaselModel()
-        self.predictWeaselModel(img)
+        # self.loadWeaselModel()
+        # self.predictWeaselModel(img)
         self.loadMouseModel()
         self.predictMouseModel(img)
     
@@ -248,7 +248,7 @@ def catTest(allModels, outputFile):
     # cat, coyote, deer, dog, fox, rabbit, squirrel
     outputFile.write("Cats: \n")
     results = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    directory = 'extraTest/extraCat'
+    directory = '../actualTest1'
     for filename in os.listdir(directory):
         f = os.path.join(directory, filename)
         if os.path.isfile(f):
@@ -605,14 +605,12 @@ def mouseTest(allModels, outputFile):
 
 def main():
     allModels = MultiModels()
-    # allModels.predictAll('../extraCroppedFox/3314.jpg___crop00_md_v5a.0.0.pt.jpg')
-    # # allModels.predictAll('../cropped_dog/5665.jpg___crop00_md_v5a.0.0.ptFlippedImage.jpg')
-    # # allModels.predictAll('../deerCrop.jpg', target_size=(224,224))
-    # print(allModels.getPredictions())
-    # print(allModels.mostLikelyAnimal(), allModels.highestPercent())
-    outputFile = open("outputFilenum2.txt", "a")
+    allModels.predictAll('../deerCrop.jpg')
+    print(allModels.getPredictions())
+    print(allModels.mostLikelyAnimal(), allModels.highestPercent())
     
-    catTest(allModels, outputFile)
+    # outputFile = open("outputFilenum2.txt", "a")   
+    # catTest(allModels, outputFile)
     # coyoteTest(allModels, outputFile)
     # deerTest(allModels, outputFile)
     # dogTest(allModels, outputFile)
