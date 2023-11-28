@@ -15,13 +15,13 @@ class MultiModels:
         """
         Initializes the dictionary to be filled with prediciton
         """
-        self.testResults = {'deer'     : 0,
-                            'squirrel' : 0,
-                            'mouse'    : 0,
-                            'fox'      : 0,
+        self.testResults = {'cat'      : 0,
                             'coyote'   : 0,
-                            'dog'      : 0, #(pets off leash)
-                            'cat'      : 0,
+                            'dog'      : 0,
+                            'deer'     : 0,
+                            'fox'      : 0,
+                            'mouse'    : 0,
+                            'squirrel' : 0,
                             'rabbit'   : 0,
                             'weasel'   : 0,}
                             # Maybe groundhogs
@@ -200,8 +200,8 @@ class MultiModels:
         Predicts liklihood of all animals
         @Param: the image to predict on
         """
-        self.testResults = {'deer' : 0, 'squirrel' : 0, 'mouse' : 0, 'fox' : 0, 'coyote' : 0, 'dog' : 0, 'cat' : 0,
-                            'rabbit' : 0, 'weasel' : 0,}
+        self.testResults = {'cat'      : 0, 'coyote'   : 0, 'dog'      : 0, 'deer'     : 0, 
+                            'fox'      : 0, 'mouse'    : 0, 'squirrel' : 0, 'rabbit'   : 0, 'weasel'   : 0,}
 
         self.loadDeerModel()
         self.predictDeerModel(img)
@@ -222,9 +222,9 @@ class MultiModels:
         self.loadMouseModel()
         self.predictMouseModel(img)
     
-    def displayPredictions(self):
+    def getPredictions(self):
         """
-        Displays the Dictrionary with the predictions
+        Returns the Dictrionary with the predictions
         """
         return self.testResults
 
@@ -235,13 +235,20 @@ class MultiModels:
         """
         return max(self.testResults, key = self.testResults.get)
     
+    def highestPercent(self):
+        """
+        Gives the animal with the highest likely hood
+        @Return: The name of the animal with the highest prediction level
+        """
+        return (self.testResults[self.mostLikelyAnimal()])
+    
 
 def catTest(allModels, outputFile):
     i = 0
     # cat, coyote, deer, dog, fox, rabbit, squirrel
     outputFile.write("Cats: \n")
     results = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    directory = 'extraTest/testCat'
+    directory = 'extraTest/extraCat'
     for filename in os.listdir(directory):
         f = os.path.join(directory, filename)
         if os.path.isfile(f):
@@ -250,7 +257,7 @@ def catTest(allModels, outputFile):
             outputFile.write(str(f))
             outputFile.write("\n")
             allModels.predictAll(f)
-            outputFile.write(str(allModels.displayPredictions()))
+            outputFile.write(str(allModels.getPredictions()))
             outputFile.write("\n\n")
             animal = allModels.mostLikelyAnimal()
             if animal == 'cat':
@@ -276,7 +283,7 @@ def catTest(allModels, outputFile):
     outputFile.write(str(results))
     outputFile.write("\n\n")
 
-def CoyoteTest(allModels, outputFile):
+def coyoteTest(allModels, outputFile):
     i = 0
     #cat, coyote, deer, dog, fox, rabbit, squirrel
     outputFile.write("Coyotes: \n")
@@ -290,7 +297,7 @@ def CoyoteTest(allModels, outputFile):
             outputFile.write(str(f))
             outputFile.write("\n")
             allModels.predictAll(f)
-            outputFile.write(str(allModels.displayPredictions()))
+            outputFile.write(str(allModels.getPredictions()))
             outputFile.write("\n\n")
             animal = allModels.mostLikelyAnimal()
             if animal == 'cat':
@@ -330,7 +337,7 @@ def deerTest(allModels, outputFile):
             outputFile.write(str(f))
             outputFile.write("\n")
             allModels.predictAll(f)
-            outputFile.write(str(allModels.displayPredictions()))
+            outputFile.write(str(allModels.getPredictions()))
             outputFile.write("\n\n")
             animal = allModels.mostLikelyAnimal()
             if animal == 'cat':
@@ -370,7 +377,7 @@ def dogTest(allModels, outputFile):
             outputFile.write(str(f))
             outputFile.write("\n")
             allModels.predictAll(f)
-            outputFile.write(str(allModels.displayPredictions()))
+            outputFile.write(str(allModels.getPredictions()))
             outputFile.write("\n\n")
             animal = allModels.mostLikelyAnimal()
             if animal == 'cat':
@@ -410,7 +417,7 @@ def foxTest(allModels, outputFile):
             outputFile.write(str(f))
             outputFile.write("\n")
             allModels.predictAll(f)
-            outputFile.write(str(allModels.displayPredictions()))
+            outputFile.write(str(allModels.getPredictions()))
             outputFile.write("\n\n")
             animal = allModels.mostLikelyAnimal()
             if animal == 'cat':
@@ -450,7 +457,7 @@ def rabbitTest(allModels, outputFile):
             outputFile.write(str(f))
             outputFile.write("\n")
             allModels.predictAll(f)
-            outputFile.write(str(allModels.displayPredictions()))
+            outputFile.write(str(allModels.getPredictions()))
             outputFile.write("\n\n")
             animal = allModels.mostLikelyAnimal()
             if animal == 'cat':
@@ -490,7 +497,7 @@ def squirrelTest(allModels, outputFile):
             outputFile.write(str(f))
             outputFile.write("\n")
             allModels.predictAll(f)
-            outputFile.write(str(allModels.displayPredictions()))
+            outputFile.write(str(allModels.getPredictions()))
             outputFile.write("\n\n")
             animal = allModels.mostLikelyAnimal()
             if animal == 'cat':
@@ -530,7 +537,7 @@ def weaselTest(allModels, outputFile):
             outputFile.write(str(f))
             outputFile.write("\n")
             allModels.predictAll(f)
-            outputFile.write(str(allModels.displayPredictions()))
+            outputFile.write(str(allModels.getPredictions()))
             outputFile.write("\n\n")
             animal = allModels.mostLikelyAnimal()
             if animal == 'cat':
@@ -570,7 +577,7 @@ def mouseTest(allModels, outputFile):
             outputFile.write(str(f))
             outputFile.write("\n")
             allModels.predictAll(f)
-            outputFile.write(str(allModels.displayPredictions()))
+            outputFile.write(str(allModels.getPredictions()))
             outputFile.write("\n\n")
             animal = allModels.mostLikelyAnimal()
             if animal == 'cat':
@@ -598,19 +605,22 @@ def mouseTest(allModels, outputFile):
 
 def main():
     allModels = MultiModels()
+    # allModels.predictAll('../extraCroppedFox/3314.jpg___crop00_md_v5a.0.0.pt.jpg')
+    # # allModels.predictAll('../cropped_dog/5665.jpg___crop00_md_v5a.0.0.ptFlippedImage.jpg')
+    # # allModels.predictAll('../deerCrop.jpg', target_size=(224,224))
+    # print(allModels.getPredictions())
+    # print(allModels.mostLikelyAnimal(), allModels.highestPercent())
+    outputFile = open("outputFilenum2.txt", "a")
     
-    allModels.predictAll('../deer.JPG')
-    testPicture = load_img('../deer.jpg', target_size=(224,224))
-    testPicture.show()
-    print(allModels.displayPredictions())
-    print(allModels.mostLikelyAnimal())
-    # allModels.predictAll('../squirrel.JPG')
-    # testPicture = load_img('../squirrel.jpg', target_size=(224,224))
-    # testPicture.show()
-    # allModels.displayPredictions()
-    # print(allModels.mostLikelyAnimal())
-
-    # outputFile = open("outputFile.txt", "a")
+    catTest(allModels, outputFile)
+    # coyoteTest(allModels, outputFile)
+    # deerTest(allModels, outputFile)
+    # dogTest(allModels, outputFile)
+    # foxTest(allModels, outputFile)
+    # squirrelTest(allModels, outputFile)
+    # rabbitTest(allModels, outputFile)
+    # weaselTest(allModels, outputFile)
+    # mouseTest(allModels, outputFile)
 
 
 if __name__ == "__main__":
