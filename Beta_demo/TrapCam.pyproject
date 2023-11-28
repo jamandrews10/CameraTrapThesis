@@ -1,7 +1,0 @@
-{
-    "files": [
-        "Resources.qrc",
-        "mainwindow.py",
-        "mainwindow.ui"
-    ]
-}

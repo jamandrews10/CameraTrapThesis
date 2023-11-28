@@ -1,4 +1,0 @@
-This is a previous note
-The cursor should be under this line for the User to add more comments
-
-Another note
