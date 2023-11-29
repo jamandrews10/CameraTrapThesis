@@ -1,0 +1,8 @@
+11/05/2023 17:39:53: Lab Assisstants, please be on the lookout for false positives.
+
+
+11/09/2023 15:31:34: If filtered is unchanged, don't filter again (to save time)
+
+11/09/2023 15:31:34: How do I save time on filtering/loading?
+
+11/27/2023 10:25:11: Make everything line up. (even if only 2 images)
