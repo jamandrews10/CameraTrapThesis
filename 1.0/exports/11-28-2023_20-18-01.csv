@@ -1,0 +1,4 @@
+ID,IMAGEPATH,CROPPEDPATH,CLASSIFICATION,CONFIRMED,CAMERA,DATETIME,DAYNIGHT,TAGS
+1,input/CameraA/very important.JPG,cropped/CameraA/very important.JPG___crop00_md_v5a.0.0.pt.jpg,mouse,Pending,CameraA,2023-09-18 00:11:24,night,
+3,input/CameraA/very important copy.JPG,cropped/CameraA/very important copy.JPG___crop00_md_v5a.0.0.pt.jpg,mouse,Pending,CameraA,2023-11-28 11:24:37.318484,day,
+5,input/CameraA/image_50417665.JPG,cropped/CameraA/image_50417665.JPG___crop00_md_v5a.0.0.pt.jpg,deer,Pending,CameraA,2023-11-28 19:49:10.934320,night,

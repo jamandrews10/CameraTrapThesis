@@ -1,0 +1,8 @@
+ID,IMAGEPATH,CROPPEDPATH,CLASSIFICATION,CONFIRMED,CAMERA,DATETIME,DAYNIGHT,TAGS
+1,input/CameraA/very important.JPG,cropped/CameraA/very important.JPG___crop00_md_v5a.0.0.pt.jpg,mouse,Pending,CameraA,2023-09-18 00:11:24,night,
+2,input/CameraB/747.jpg,cropped/CameraB/747.jpg___crop00_md_v5a.0.0.pt.jpg,mouse,Pending,CameraB,2023-09-19 14:24:20,day,
+3,input/CameraA/very important copy.JPG,cropped/CameraA/very important copy.JPG___crop00_md_v5a.0.0.pt.jpg,mouse,Pending,CameraA,2023-11-28 11:24:37.318484,day,
+4,input/CameraB/747 copy.jpg,cropped/CameraB/747 copy.jpg___crop00_md_v5a.0.0.pt.jpg,mouse,Pending,CameraB,2023-11-28 11:24:40.059387,day,
+5,input/CameraA/image_50417665.JPG,cropped/CameraA/image_50417665.JPG___crop00_md_v5a.0.0.pt.jpg,deer,Pending,CameraA,2023-11-28 19:49:10.934320,night,
+6,input/CameraB/3260.jpg,cropped/CameraB/3260.jpg___crop00_md_v5a.0.0.pt.jpg,fox,Pending,CameraB,2023-11-28 19:49:32.396364,night,
+7,input/CameraC/58b9d6cb-23d2-11e8-a6a3-ec086b02610b.jpg,cropped/CameraC/58b9d6cb-23d2-11e8-a6a3-ec086b02610b.jpg___crop00_md_v5a.0.0.pt.jpg,fox,Pending,CameraC,2023-10-29 23:11:04,night,

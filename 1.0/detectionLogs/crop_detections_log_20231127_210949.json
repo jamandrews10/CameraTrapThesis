@@ -1,0 +1,16 @@
+{
+ "images_missing_detections": [],
+ "images_failed_download_or_crop": [
+  "input/CameraA/6635.jpg",
+  "input/CameraA/6664.jpg",
+  "input/CameraA/IMG_0033.JPG",
+  "input/CameraA/SEQ81092_IMG_0001.JPG",
+  "input/CameraA/SEQ87752_IMG_0009.JPG",
+  "input/CameraA/image_50417665.JPG",
+  "input/CameraA/image_50428417.JPG",
+  "input/CameraA/IMG_0077.JPG",
+  "input/CameraA/SEQ90597_IMG_0016.JPG"
+ ],
+ "num_new_downloads": 0,
+ "num_new_crops": 0
+}
