@@ -181,6 +181,8 @@ class MultiModels:
         Loads the Weasel Classification Model
         """
         self.currentModel = keras.models.load_model('../models/mouseModel.keras')
+
+    # def loadAllModels()
     
     def predictMouseModel(self, img):
         """
@@ -203,24 +205,43 @@ class MultiModels:
         self.testResults = {'cat' : 0, 'coyote' : 0, 'deer' : 0, 'dog' : 0, 
                             'fox' : 0, 'mouse' : 0, 'rabbit' : 0, 'squirrel' : 0, 'weasel' : 0,}
 
+        
         self.loadDeerModel()
         self.predictDeerModel(img)
+        if self.testResults['deer'] >= 0.5:
+            return
         self.loadSquirrelModel()
         self.predictSquirrelModel(img)
-        self.loadRabbitModel()
-        self.predictRabbitModel(img)
+        if self.testResults['squirrel'] >= 0.5:
+            return
         self.loadFoxModel()
         self.predictFoxModel(img)
+        if self.testResults['fox'] >= 0.75:
+            return
+        self.loadWeaselModel()
+        self.predictWeaselModel(img)
+        if self.testResults['rabbit'] >= 0.75:
+            return
         self.loadDogModel()
         self.predictDogModel(img)
+        if self.testResults['dog'] >= 0.75:
+            return
         self.loadCatModel()
         self.predictCatModel(img)
+        if self.testResults['cat'] >= 0.75:
+            return
         self.loadCoyoteModel()
         self.predictCoyoteModel(img)
-        # self.loadWeaselModel()
-        # self.predictWeaselModel(img)
+        if self.testResults['coyote'] >= 0.75:
+            return
+        self.loadRabbitModel()
+        self.predictRabbitModel(img)
+        if self.testResults['weasel'] >= 0.75:
+            return
         self.loadMouseModel()
         self.predictMouseModel(img)
+        if self.testResults['mouse'] >= 0.75:
+            return
     
     def getPredictions(self):
         """
@@ -243,12 +264,56 @@ class MultiModels:
         return (self.testResults[self.mostLikelyAnimal()])
     
 
+def realTest(allModels, outputFile, otherFile):
+    i = 0
+    # cat, coyote, deer, dog, fox, rabbit, squirrel
+    outputFile.write("Cats: \n")
+    results = [0, 0, 0, 0, 0, 0, 0, 0, 0]
+    directory = '../testData'
+    for filename in os.listdir(directory):
+        f = os.path.join(directory, filename)
+        if os.path.isfile(f):
+            # outputFile.write(str(i))
+            # outputFile.write(": ")
+            # outputFile.write(str(f))
+            # outputFile.write("\n")
+            allModels.predictAll(f)
+            # outputFile.write(str(allModels.getPredictions()))
+            animal = allModels.mostLikelyAnimal()
+            outputFile.write(animal)
+            otherFile.write(str(allModels.highestPercent()))
+            outputFile.write("\n")
+            otherFile.write("\n")
+            if animal == 'cat':
+                results[0] += 1
+            elif animal == 'coyote':
+                results[1] += 1
+            elif animal == 'deer':
+                results[2] += 1
+            elif animal == 'dog':
+                results[3] += 1
+            elif animal == 'fox':
+                results[4] += 1
+            elif animal == 'mouse':
+                results[5] += 1   
+            elif animal == 'rabbit':
+                results[6] += 1
+            elif animal == 'squirrel':
+                results[7] += 1
+            elif animal == 'weasel':
+                results[8] += 1
+        i += 1
+    outputFile.write("Test Results: ")
+    outputFile.write(str(results))
+    outputFile.write("\n\n")
+    
+
 def catTest(allModels, outputFile):
     i = 0
     # cat, coyote, deer, dog, fox, rabbit, squirrel
     outputFile.write("Cats: \n")
     results = [0, 0, 0, 0, 0, 0, 0, 0, 0]
-    directory = '../actualTest1'
+    directory = 'testData/testCat'
     for filename in os.listdir(directory):
         f = os.path.join(directory, filename)
         if os.path.isfile(f):
@@ -258,8 +323,8 @@ def catTest(allModels, outputFile):
             outputFile.write("\n")
             allModels.predictAll(f)
             outputFile.write(str(allModels.getPredictions()))
-            outputFile.write("\n\n")
-            animal = allModels.mostLikelyAnimal()
+            outputFile.write("\n")
+            # animal = allModels.mostLikelyAnimal()
             if animal == 'cat':
                 results[0] += 1
             elif animal == 'coyote':
@@ -605,12 +670,32 @@ def mouseTest(allModels, outputFile):
 
 def main():
     allModels = MultiModels()
-    allModels.predictAll('../deerCrop.jpg')
+
+    img = ('../maybe/IMG_0135 (2).JPG___crop01_md_v5a.0.0.pt.jpg')
+    allModels.predictAll(img)
+    testPicture = load_img(img, target_size=(224,224))
+    testPicture.show()
     print(allModels.getPredictions())
     print(allModels.mostLikelyAnimal(), allModels.highestPercent())
     
-    # outputFile = open("outputFilenum2.txt", "a")   
-    # catTest(allModels, outputFile)
+    # outputFile = open("outputFilenum6.txt", "a")  
+    # otherFile = open("outputFile7.txt", "a") 
+    # directory = '../testData'
+    
+    
+    
+    # # for filename in os.listdir(directory):
+    # #     f = os.path.join(directory, filename)
+    # #     if os.path.isfile(f):
+    # #         # outputFile.write(str(i))
+    # #         # outputFile.write(": ")
+    # #         outputFile.write(str(f))
+    # #         outputFile.write("\n")
+
+
+
+    # realTest(allModels, outputFile, otherFile)
+
     # coyoteTest(allModels, outputFile)
     # deerTest(allModels, outputFile)
     # dogTest(allModels, outputFile)
