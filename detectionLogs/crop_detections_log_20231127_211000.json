@@ -1,0 +1,18 @@
+{
+ "images_missing_detections": [],
+ "images_failed_download_or_crop": [
+  "input/CameraB/58b9d6cb-23d2-11e8-a6a3-ec086b02610b.jpg",
+  "input/CameraB/1295.jpg",
+  "input/CameraB/1365.jpg",
+  "input/CameraB/303.jpg",
+  "input/CameraB/3372.jpg",
+  "input/CameraB/120.jpg",
+  "input/CameraB/5501.jpg",
+  "input/CameraB/58b4abbc-23d2-11e8-a6a3-ec086b02610b.jpg",
+  "input/CameraB/3260.jpg",
+  "input/CameraB/5150.jpg",
+  "input/CameraB/747.jpg"
+ ],
+ "num_new_downloads": 0,
+ "num_new_crops": 0
+}

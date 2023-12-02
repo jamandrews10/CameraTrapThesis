@@ -1,0 +1,3 @@
+ID,IMAGEPATH,CROPPEDPATH,CLASSIFICATION,CONFIDENCE,CONFIRMED,CAMERA,DATETIME,DAYNIGHT,TAGS
+1,input/CameraA/very important.JPG,cropped/CameraA/very important.JPG___crop00_md_v5a.0.0.pt.jpg,deer,0.9723173,Pending,CameraA,2023-09-18 00:11:24,night,First Project
+2,input/CameraD/3260.jpg,cropped/CameraD/3260.jpg___crop00_md_v5a.0.0.pt.jpg,fox,0.9998911,Confirmed,CameraD,2023-12-01 20:42:08.468604,night,First Project
