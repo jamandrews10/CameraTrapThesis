@@ -361,10 +361,7 @@ def load_and_crop(img_path: str,
             continue
         if bbox_dict['category'] != 'animal':
             continue
-        print("about to")
-        print("image path is: ", img_path)
         crop_path = crop_path_template.format(img_path= img_path[img_path.rfind('/'):], n=i)
-        print("CROP_Path:",crop_path)
         if not os.path.exists(crop_path) or (
                 check_crops_valid and load_local_image(crop_path) is None):
             bboxes_tocrop[crop_path] = bbox_dict['bbox']
@@ -460,62 +457,62 @@ def save_crop(img: Image.Image, bbox_norm: Sequence[float], square_crop: bool,
 
 #%% Command-line driver
 
-def _parse_args() -> argparse.Namespace:
+# def _parse_args() -> argparse.Namespace:
     
-    parser = argparse.ArgumentParser(
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
-        description='Crop detections from MegaDetector.')
-    parser.add_argument(
-        'detections_json',
-        help='path to detections JSON file')
-    parser.add_argument(
-        'cropped_images_dir',
-        help='path to local directory for saving crops of bounding boxes')
-    parser.add_argument(
-        '-i', '--images-dir',
-        help='path to directory where full images are already available, '
-             'or where images will be written if --save-full-images is set')
-    parser.add_argument(
-        '-c', '--container-url',
-        help='URL (including SAS token, if necessary) of Azure Blob Storage '
-             'container to download images from, if images are not all already '
-             'locally available in <images_dir>')
-    parser.add_argument(
-        '-v', '--detector-version',
-        help='detector version string, e.g., "4.1", used if detector version '
-             'cannot be inferred from detections JSON')
-    parser.add_argument(
-        '--save-full-images', action='store_true',
-        help='forces downloading of full images to --images-dir')
-    parser.add_argument(
-        '--square-crops', action='store_true',
-        help='crop bounding boxes as squares')
-    parser.add_argument(
-        '--check-crops-valid', action='store_true',
-        help='load each crop to ensure file is valid (i.e., not truncated)')
-    parser.add_argument(
-        '-t', '--threshold', type=float, default=0.0,
-        help='confidence threshold above which to crop bounding boxes')
-    parser.add_argument(
-        '-n', '--threads', type=int, default=1,
-        help='number of threads to use for downloading and cropping images')
-    parser.add_argument(
-        '--logdir', default='.',
-        help='path to directory to save log file')
-    return parser.parse_args()
+#     parser = argparse.ArgumentParser(
+#         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+#         description='Crop detections from MegaDetector.')
+#     parser.add_argument(
+#         'detections_json',
+#         help='path to detections JSON file')
+#     parser.add_argument(
+#         'cropped_images_dir',
+#         help='path to local directory for saving crops of bounding boxes')
+#     parser.add_argument(
+#         '-i', '--images-dir',
+#         help='path to directory where full images are already available, '
+#              'or where images will be written if --save-full-images is set')
+#     parser.add_argument(
+#         '-c', '--container-url',
+#         help='URL (including SAS token, if necessary) of Azure Blob Storage '
+#              'container to download images from, if images are not all already '
+#              'locally available in <images_dir>')
+#     parser.add_argument(
+#         '-v', '--detector-version',
+#         help='detector version string, e.g., "4.1", used if detector version '
+#              'cannot be inferred from detections JSON')
+#     parser.add_argument(
+#         '--save-full-images', action='store_true',
+#         help='forces downloading of full images to --images-dir')
+#     parser.add_argument(
+#         '--square-crops', action='store_true',
+#         help='crop bounding boxes as squares')
+#     parser.add_argument(
+#         '--check-crops-valid', action='store_true',
+#         help='load each crop to ensure file is valid (i.e., not truncated)')
+#     parser.add_argument(
+#         '-t', '--threshold', type=float, default=0.0,
+#         help='confidence threshold above which to crop bounding boxes')
+#     parser.add_argument(
+#         '-n', '--threads', type=int, default=1,
+#         help='number of threads to use for downloading and cropping images')
+#     parser.add_argument(
+#         '--logdir', default='.',
+#         help='path to directory to save log file')
+#     return parser.parse_args()
 
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
     
-    args = _parse_args()
-    main(detections_json_path=args.detections_json,
-         cropped_images_dir=args.cropped_images_dir,
-         images_dir=args.images_dir,
-         container_url=args.container_url,
-         detector_version=args.detector_version,
-         save_full_images=args.save_full_images,
-         square_crops=args.square_crops,
-         check_crops_valid=args.check_crops_valid,
-         confidence_threshold=args.threshold,
-         threads=args.threads,
-         logdir=args.logdir)
+#     args = _parse_args()
+#     main(detections_json_path=args.detections_json,
+#          cropped_images_dir=args.cropped_images_dir,
+#          images_dir=args.images_dir,
+#          container_url=args.container_url,
+#          detector_version=args.detector_version,
+#          save_full_images=args.save_full_images,
+#          square_crops=args.square_crops,
+#          check_crops_valid=args.check_crops_valid,
+#          confidence_threshold=args.threshold,
+#          threads=args.threads,
+#          logdir=args.logdir)

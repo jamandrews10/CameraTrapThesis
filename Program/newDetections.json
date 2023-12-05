@@ -1,38 +1,8 @@
 {
  "images": [
   {
-   "file": "input/CameraB/3260 copy.jpg",
-   "detections": [
-    {
-     "category": "1",
-     "conf": 0.933,
-     "bbox": [
-      0.4404,
-      0.6015,
-      0.2817,
-      0.33
-     ]
-    }
-   ]
-  },
-  {
-   "file": "input/CameraB/.DS_Store",
-   "failure": "Failure image access"
-  },
-  {
-   "file": "input/CameraB/3260.jpg",
-   "detections": [
-    {
-     "category": "1",
-     "conf": 0.933,
-     "bbox": [
-      0.4404,
-      0.6015,
-      0.2817,
-      0.33
-     ]
-    }
-   ]
+   "file": "input/CameraD/image_50428417.JPG",
+   "detections": []
   }
  ],
  "detection_categories": {
@@ -41,7 +11,7 @@
   "3": "vehicle"
  },
  "info": {
-  "detection_completion_time": "2023-12-02 15:49:50",
+  "detection_completion_time": "2023-12-04 23:02:54",
   "format_version": "1.3",
   "detector": "md_v5a.0.0.pt",
   "detector_metadata": {

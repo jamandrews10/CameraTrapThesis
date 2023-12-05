@@ -1,3 +1,9 @@
+"""
+@Author: Andrew Coleman
+@Date: 12/04/2023
+@Description: Manages the database, runs megadetector images, crops images, draws bounding boxes, exports to csv
+"""
+
 from Program import crop_detections
 from PySide6 import QtSql, QtGui
 import sqlite3
@@ -29,6 +35,9 @@ class DataBase:
             "IMAGEPATH TEXT, CROPPEDPATH TEXT, CLASSIFICATION TEXT, CONFIDENCE TEXT, CONFIRMED TEXT, CAMERA TEXT, DATETIME TEXT, DAYNIGHT TEXT, TAGS TEXT)")
         
     def connect(self):
+        """
+        Connects to the database, primarily a helper function
+        """
         return sqlite3.connect(self.path)
     
     def addRow(self, values):
@@ -129,6 +138,12 @@ class DataBase:
         return sorted(rows, key = lambda x: x[sortById], reverse = reversed)
     
     def toCSV(self, filter = '*', filterValue = '*'):
+        """
+        Creates a CSV in 'exports' folder of the SQLite database, can be filtered
+        @Param filter - a string representing the name of the column to filter within
+        @Param filterValue - the the value to filter by
+            ---set either parameter to '*' to retrieve all rows in the database
+        """
         conn = self.connect()
         if (filter == '*' or filterValue == '*'):
             cursor = conn.execute("SELECT * FROM Paths")
@@ -136,7 +151,6 @@ class DataBase:
             cursor = conn.execute("SELECT * FROM Paths WHERE {} LIKE ?".format(filter), ('%'+filterValue+'%',))
         else:
             cursor = conn.execute("SELECT * FROM Paths WHERE {}=?".format(filter), (filterValue,))
-        # cursor = self.filterRows(filter, filterValue)
 
         # make the name of the csv file the current date and time and save it in a folder called "exports"
         now = datetime.datetime.now()
@@ -151,6 +165,10 @@ class DataBase:
             csvWriter.writerows(cursor)
 
     def getAllTags(self):
+        """
+        Generates a set of all tags present in database
+        @Returns a set of strings containing each unique tag
+        """
         allRows = self.filterRows('*','*')
         allTags = set()
         for row in allRows:
@@ -160,6 +178,10 @@ class DataBase:
         return allTags
     
     def getAllCameras(self):
+        """
+        Generates a set of all camera names present in database
+        @Returns a set of strings containing each unique tag
+        """
         allRows = self.filterRows('*','*')
         allCameras = set()
         for row in allRows:
@@ -168,6 +190,11 @@ class DataBase:
         return allCameras
     
     def addTag(self, id, tag):
+        """
+        Adds a new tag to an image
+        @Param id - int representing id of image in database
+        @Param tag - string of tag to assign to image
+        """
         tags = self.getRow(id)[-1]
         if tags == "":
             self.changeValue(id,"TAGS",tag)
@@ -180,6 +207,11 @@ class DataBase:
 
 
     def deleteTag(self, id, tag):
+        """
+        Removes a tag from an image
+        @Param id - int representing id of image in database
+        @Param tag - string of tag to remove from image
+        """
         tags = self.getRow(id)[-1]
         if tags != "":
             tags = tags.split(',')
@@ -189,9 +221,20 @@ class DataBase:
                 self.changeValue(id,"TAGS",tags)
 
     def getTags(self, id):
+        """
+        Returns list of tags for a specified image
+        @Param id - int representing id of image in database
+        @Returns a list of strings of each tag
+        """
         return self.getRow(id)[-1].split(',')
 
-    def detectNew(self,inputPath, croppedPath):
+    def detectNew(self, inputPath, croppedPath):
+        """
+        Checks for new images then runs them through megadetector, creates cropped images, 
+            adds bounding boxes to original images, and runs them through the animal classification models
+        @Param inputPath - path to input folder containing camera subfolders which contain images
+        @Param inputPath - path to cropped folder where cropped images will be stored
+        """
         conn = self.connect()
         
         cameraPaths = [f.path for f in os.scandir(inputPath) if f.is_dir()]
@@ -200,7 +243,7 @@ class DataBase:
             cameraPath = cameraPath.replace('\\','/')
             for imgName in os.listdir(cameraPath):
                 imgPath = os.path.join(cameraPath,imgName).replace('\\','/')
-                #Check that image does noe already exist in database
+                #Check that image does not already exist in database
                 if conn.execute("SELECT ID FROM Paths where IMAGEPATH = ?", (imgPath,)).fetchone() is None:
                     print("Adding", imgPath)
                     imageQueue.append(imgPath)
@@ -219,7 +262,6 @@ class DataBase:
             print("Done Detection for", cameraPath)
 
             #Create dirs for cropped images they dont already exist
-            # croppedCameraPaths = [f.path for f in os.scandir(croppedPath) if f.is_dir()]
             croppedCameraPath = cameraPath.replace(inputPath,croppedPath)
             print(croppedCameraPath)
             if not os.path.exists(croppedCameraPath):
@@ -228,7 +270,7 @@ class DataBase:
             self.cropCamera(outputFile,croppedCameraPath,cameraPath,threshold,imageQueue)
             print("Done Cropping for", cameraPath)
 
-            print("adding bboxs for", cameraPath)
+            print("Adding bboxs for", cameraPath)
             visualize_detector_output.visualize_detector_output(detector_output_path = "Program/newDetections.json",
                               out_dir = ".",
                               images_dir = ".",
@@ -239,7 +281,7 @@ class DataBase:
                               random_seed = None,
                               render_detections_only = False,
                               classification_confidence_threshold = 0.5,
-                              html_outputFile=None,
+                              html_output_file=None,
                               html_output_options=None)
 
             #Now run our classification
@@ -251,9 +293,7 @@ class DataBase:
             uncroppedFilesNames = [os.path.basename(file) for file in uncroppedFiles]
             # get all files from croppedCameraPath
             croppedFiles = [file for file in os.listdir(croppedCameraPath) if file.startswith(tuple(uncroppedFilesNames))]
-            # print("croppedFiles", croppedFiles)
-            # print("uncroppedFiles", uncroppedFiles)
-            # print("uncroppedFilesNames", uncroppedFilesNames)
+
             allModels = MultiModels()
 
             # Iterate over all files
@@ -284,6 +324,9 @@ class DataBase:
         print("Done!")
 
     def checkDeletes(self):
+        """
+        Checks if images in the database have been deleted from input folder and deletes them if so
+        """
         conn = self.connect()
         cursor = conn.execute("SELECT ID, IMAGEPATH from Paths")
         deleteQueue = []
@@ -296,6 +339,13 @@ class DataBase:
             self.deleteRow(id)
 
     def detectCamera(self,imageQueue, detectorFile, outputFile, threshold):
+        """
+        Runs megadetector for a camera folder
+        @Param imageQueue - list of paths of images to run detector on
+        @Param detectorFile - path to megadetector module file
+        @Param outputFile - path to newDetections.json (stores bbox coordinations)
+        @Param threshold - minimum confidence threshold in order to detect image
+        """
         detectorFile=detectorFile
         outputFile = outputFile
         threshold = threshold
@@ -336,25 +386,32 @@ class DataBase:
         print('Finished inference for {} images in {} ({:.2f} images per second)'.format(
             len(results),humanfriendly.format_timespan(elapsed),imagesPerSecond))
 
-        write_results_to_file(results, outputFile, 
-                            detectorFile=detectorFile,include_max_conf=include_max_conf)
+        write_results_to_file(results, outputFile, detector_file=detectorFile,include_max_conf=include_max_conf)
 
 
     def cropCamera(self,outputFile,croppedCameraPath,cameraPath,threshold,imageQueue):
-            crop_detections.main(detections_json_path=outputFile,
-            cropped_images_dir=croppedCameraPath,
-            images_dir=cameraPath,
-            container_url=None,
-            detector_version=None,
-            save_full_images=None,
-            square_crops=True,
-            check_crops_valid=None,
-            confidence_threshold=threshold,
-            threads=None,
-            logdir="detectionLogs",
-            imageQueue = imageQueue
-            )
-            print("Cropped new imgs in", cameraPath)
+        """
+        Crops detected images for a camera folder
+        @Param outputFile - path to newDetections.json (stores bbox coordinations)
+        @Param croppedCameraPath - path to folder containing cropped images for specific camera
+        @Param cameraPath - path to folder containing uncropped images for specific camera
+        @Param threshold - minimum confidence threshold in order to detect image
+        @Param imageQueue - list of paths of images to crop
+        """
+        crop_detections.main(detections_json_path=outputFile,
+        cropped_images_dir=croppedCameraPath,
+        images_dir=cameraPath,
+        container_url=None,
+        detector_version=None,
+        save_full_images=None,
+        square_crops=True,
+        check_crops_valid=None,
+        confidence_threshold=threshold,
+        threads=None,
+        logdir="detectionLogs",
+        imageQueue = imageQueue
+        )
+        print("Cropped new imgs in", cameraPath)
         
 
 

@@ -132,7 +132,7 @@ class TrapCam(QMainWindow):
             "Lowest Confidence" : "CONFIDENCE"
         }
         self.currentFilter = filterCase[filter]
-        self.currentFilter = filter
+        self.currentFilterValue = filter
         filterd = database.filterRows(filterCase[filter], filter)
         if sort == "Latest to Oldest":
             sorted = database.sortRows(filterd, "DATETIME", True)
