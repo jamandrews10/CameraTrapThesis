@@ -18,12 +18,12 @@ class MapWidget(QScrollArea):
         self.stack.addWidget(self.webView)
         self.buttons = QHBoxLayout()
         # add buttons to the scroll area
-        self.add_button = QPushButton("Add Marker")
-        self.remove_button = QPushButton("Remove Marker")
-        self.add_button.clicked.connect(self.addMarker)
-        self.remove_button.clicked.connect(self.removeMarker)
-        self.buttons.addWidget(self.add_button)
-        self.buttons.addWidget(self.remove_button)
+        self.addButton = QPushButton("Add Marker")
+        self.removeButton = QPushButton("Remove Marker")
+        self.addButton.clicked.connect(self.addMarker)
+        self.removeButton.clicked.connect(self.removeMarker)
+        self.buttons.addWidget(self.addButton)
+        self.buttons.addWidget(self.removeButton)
         self.stack.addLayout(self.buttons)
 
         self.setLayout(self.stack)

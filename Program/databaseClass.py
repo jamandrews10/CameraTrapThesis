@@ -108,10 +108,10 @@ class DataBase:
             cursor = conn.execute("SELECT * FROM Paths WHERE {}=?".format(filter), (filterValue,))
         output = []
         for row in cursor:
-            output_row = []
+            outputRow = []
             for col in row:
-                output_row.append(col)
-            output.append(output_row)
+                outputRow.append(col)
+            output.append(outputRow)
         conn.close()
         return output
     
@@ -140,15 +140,15 @@ class DataBase:
 
         # make the name of the csv file the current date and time and save it in a folder called "exports"
         now = datetime.datetime.now()
-        date_time = now.strftime("%m-%d-%Y_%H-%M-%S")
-        folder_name = "exports"
-        if not os.path.exists(folder_name):
-            os.makedirs(folder_name)
-        csv_name = folder_name + "/" + date_time + ".csv"
-        with open(csv_name, 'w') as csv_file:
-            csv_writer = csv.writer(csv_file, delimiter=",")
-            csv_writer.writerow([i[0] for i in cursor.description])
-            csv_writer.writerows(cursor)
+        dateTime = now.strftime("%m-%d-%Y_%H-%M-%S")
+        folderName = "exports"
+        if not os.path.exists(folderName):
+            os.makedirs(folderName)
+        csvName = folderName + "/" + dateTime + ".csv"
+        with open(csvName, 'w') as csvFile:
+            csvWriter = csv.writer(csvFile, delimiter=",")
+            csvWriter.writerow([i[0] for i in cursor.description])
+            csvWriter.writerows(cursor)
 
     def getAllTags(self):
         allRows = self.filterRows('*','*')
@@ -191,10 +191,10 @@ class DataBase:
     def getTags(self, id):
         return self.getRow(id)[-1].split(',')
 
-    def detectNew(self,input_path, cropped_path):
+    def detectNew(self,inputPath, croppedPath):
         conn = self.connect()
         
-        cameraPaths = [f.path for f in os.scandir(input_path) if f.is_dir()]
+        cameraPaths = [f.path for f in os.scandir(inputPath) if f.is_dir()]
         for cameraPath in cameraPaths:
             imageQueue = []
             cameraPath = cameraPath.replace('\\','/')
@@ -211,21 +211,21 @@ class DataBase:
                 print("No new images for", cameraPath)
                 continue
 
-            detector_file = 'Models/md_v5a.0.0.pt'
-            output_file='Program/newDetections.json'
+            detectorFile = 'Models/md_v5a.0.0.pt'
+            outputFile='Program/newDetections.json'
             threshold=0.5                   #This could be changed later if we want to implement a sensitivity slider
 
-            self.detectCamera(imageQueue,detector_file,output_file,threshold)
+            self.detectCamera(imageQueue,detectorFile,outputFile,threshold)
             print("Done Detection for", cameraPath)
 
             #Create dirs for cropped images they dont already exist
-            # croppedCameraPaths = [f.path for f in os.scandir(cropped_path) if f.is_dir()]
-            croppedCameraPath = cameraPath.replace(input_path,cropped_path)
+            # croppedCameraPaths = [f.path for f in os.scandir(croppedPath) if f.is_dir()]
+            croppedCameraPath = cameraPath.replace(inputPath,croppedPath)
             print(croppedCameraPath)
             if not os.path.exists(croppedCameraPath):
                 os.mkdir(croppedCameraPath)
 
-            self.cropCamera(output_file,croppedCameraPath,cameraPath,threshold,imageQueue)
+            self.cropCamera(outputFile,croppedCameraPath,cameraPath,threshold,imageQueue)
             print("Done Cropping for", cameraPath)
 
             print("adding bboxs for", cameraPath)
@@ -239,47 +239,47 @@ class DataBase:
                               random_seed = None,
                               render_detections_only = False,
                               classification_confidence_threshold = 0.5,
-                              html_output_file=None,
+                              html_outputFile=None,
                               html_output_options=None)
 
             #Now run our classification
-            uncropped_files = sorted(imageQueue)
-            # delete .DS_Store files in uncropped_files
-            uncropped_files = [file for file in uncropped_files if file.find(".DS_Store") == -1]
-            # cropped_files gets all the files from croppedCameraPath which names start with filenames from uncropped_files
-            # extract file names from uncropped_files
-            uncropped_files_names = [os.path.basename(file) for file in uncropped_files]
+            uncroppedFiles = sorted(imageQueue)
+            # delete .DS_Store files in uncroppedFiles
+            uncroppedFiles = [file for file in uncroppedFiles if file.find(".DS_Store") == -1]
+            # croppedFiles gets all the files from croppedCameraPath which names start with filenames from uncroppedFiles
+            # extract file names from uncroppedFiles
+            uncroppedFilesNames = [os.path.basename(file) for file in uncroppedFiles]
             # get all files from croppedCameraPath
-            cropped_files = [file for file in os.listdir(croppedCameraPath) if file.startswith(tuple(uncropped_files_names))]
-            # print("cropped_files", cropped_files)
-            # print("uncropped_files", uncropped_files)
-            # print("uncropped_files_names", uncropped_files_names)
+            croppedFiles = [file for file in os.listdir(croppedCameraPath) if file.startswith(tuple(uncroppedFilesNames))]
+            # print("croppedFiles", croppedFiles)
+            # print("uncroppedFiles", uncroppedFiles)
+            # print("uncroppedFilesNames", uncroppedFilesNames)
             allModels = MultiModels()
 
             # Iterate over all files
-            for cropped_file, uncropped_file in zip(cropped_files, uncropped_files):
+            for croppedFile, uncroppedFile in zip(croppedFiles, uncroppedFiles):
                 # Skip files with the name ".DS_Store"
-                # if cropped_file == ".DS_Store" or uncropped_file.find(".DS_Store") != -1:
+                # if croppedFile == ".DS_Store" or uncroppedFile.find(".DS_Store") != -1:
                 #     continue
                 
-                print("cropped", cropped_file)
-                print("uncropped", uncropped_file)
+                print("cropped", croppedFile)
+                print("uncropped", uncroppedFile)
                 
-                testPicture_path = os.path.join(croppedCameraPath, cropped_file).replace("\\","/")
-                originalPicture_path = os.path.join(uncropped_file).replace("\\","/")
+                testPicturePath = os.path.join(croppedCameraPath, croppedFile).replace("\\","/")
+                originalPicturePath = os.path.join(uncroppedFile).replace("\\","/")
 
-                allModels.predictAll(testPicture_path)
+                allModels.predictAll(testPicturePath)
                 predClass = allModels.mostLikelyAnimal()
                 confidence = str(allModels.highestPercent())
                 print("found", predClass)
                 daynight = ""
-                hr = int(str(datetime.datetime.fromtimestamp(os.path.getmtime(originalPicture_path)).time())[:2])
+                hr = int(str(datetime.datetime.fromtimestamp(os.path.getmtime(originalPicturePath)).time())[:2])
                 if hr>=7 and hr<18: 
                     daynight="day"
                 else: 
                     daynight = "night" 
                 print("detected",daynight)
-                self.addRow([originalPicture_path, testPicture_path, predClass, confidence, 'Pending', cameraPath[cameraPath.rfind('/')+1:], datetime.datetime.fromtimestamp(os.path.getmtime(originalPicture_path)), daynight, []])
+                self.addRow([originalPicturePath, testPicturePath, predClass, confidence, 'Pending', cameraPath[cameraPath.rfind('/')+1:], datetime.datetime.fromtimestamp(os.path.getmtime(originalPicturePath)), daynight, []])
         
         print("Done!")
 
@@ -295,9 +295,9 @@ class DataBase:
         for id in deleteQueue:
             self.deleteRow(id)
 
-    def detectCamera(self,imageQueue, detector_file, output_file, threshold):
-        detector_file=detector_file
-        output_file = output_file
+    def detectCamera(self,imageQueue, detectorFile, outputFile, threshold):
+        detectorFile=detectorFile
+        outputFile = outputFile
         threshold = threshold
         include_max_conf=False
         quiet=True
@@ -310,15 +310,15 @@ class DataBase:
         include_exif_data=False
 
 
-        assert os.path.exists(detector_file), \
-        'detector file {} does not exist'.format(detector_file)
+        assert os.path.exists(detectorFile), \
+        'detector file {} does not exist'.format(detectorFile)
         assert 0.0 < threshold <= 1.0, 'Confidence threshold needs to be between 0 and 1'
-        assert output_file.endswith('.json'), 'output_file specified needs to end with .json'
+        assert outputFile.endswith('.json'), 'outputFile specified needs to end with .json'
         
             
         results = []
-        start_time = time.time()
-        results = load_and_run_detector_batch(model_file=detector_file,
+        startTime = time.time()
+        results = load_and_run_detector_batch(model_file=detectorFile,
                                           image_file_names=imageQueue,
                                           confidence_threshold=threshold,
                                           results=results,
@@ -331,17 +331,17 @@ class DataBase:
                                           include_image_timestamp=include_image_timestamp,
                                           include_exif_data=include_exif_data)
 
-        elapsed = time.time() - start_time
-        images_per_second = len(results) / elapsed
+        elapsed = time.time() - startTime
+        imagesPerSecond = len(results) / elapsed
         print('Finished inference for {} images in {} ({:.2f} images per second)'.format(
-            len(results),humanfriendly.format_timespan(elapsed),images_per_second))
+            len(results),humanfriendly.format_timespan(elapsed),imagesPerSecond))
 
-        write_results_to_file(results, output_file, 
-                            detector_file=detector_file,include_max_conf=include_max_conf)
+        write_results_to_file(results, outputFile, 
+                            detectorFile=detectorFile,include_max_conf=include_max_conf)
 
 
-    def cropCamera(self,output_file,croppedCameraPath,cameraPath,threshold,imageQueue):
-            crop_detections.main(detections_json_path=output_file,
+    def cropCamera(self,outputFile,croppedCameraPath,cameraPath,threshold,imageQueue):
+            crop_detections.main(detections_json_path=outputFile,
             cropped_images_dir=croppedCameraPath,
             images_dir=cameraPath,
             container_url=None,

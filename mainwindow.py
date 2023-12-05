@@ -1,4 +1,3 @@
-# This Python file uses the following encoding: utf-8
 import sys
 import os
 basedir = os.path.dirname(__file__)
@@ -13,10 +12,6 @@ from Program.textEditorClass import TextEditorWidget
 from Program.qBoxClasses import SortBox, FilterBox
 from Program.menuButtonsClass import MenuButtons
 
-# Important:
-# You need to run the following command to generate the ui_form.py file
-#     pyside6-uic form.ui -o ui_form.py, or
-#     pyside2-uic form.ui -o ui_form.py
 from ui_form import Ui_MainWindow
 
 
@@ -51,25 +46,25 @@ class TrapCam(QMainWindow):
         """
         Sets up combo boxes behavior to refresh images every time they are changed
         """
-        self.sorting_combobox.currentTextChanged.connect(self.deleteRefreshImages)
-        self.filtering_combobox.currentTextChanged.connect(self.deleteRefreshImages)
+        self.sortingCombobox.currentTextChanged.connect(self.deleteRefreshImages)
+        self.filteringCombobox.currentTextChanged.connect(self.deleteRefreshImages)
 
     def createMenuButtons(self):
         """
         Creates the main menu buttons
         """
-        self.menu_buttons = MenuButtons(["Library", "Cameras", "Notes"], self.text_editor, self.scroll_area, self.map)
-        self.menu_buttons.reload_button.clicked.connect(self.detectRefreshImages)
-        self.menu_buttons.export_button.clicked.connect(self.exportCSV)
+        self.menuButtons = MenuButtons(["Library", "Cameras", "Notes"], self.textEditor, self.scrollArea, self.map)
+        self.menuButtons.reloadButton.clicked.connect(self.detectRefreshImages)
+        self.menuButtons.exportButton.clicked.connect(self.exportCSV)
 
     def exportCSV(self):
         """
         Exports the data in the library to a csv file
         """
-        if self.current_filter == "*":
+        if self.currentFilter == "*":
             self.database.toCSV()
         else:
-            self.database.toCSV(self.current_filter, self.current_filter_value)
+            self.database.toCSV(self.currentFilter, self.currentFilterValue)
 
 
     def createMap(self):
@@ -82,34 +77,32 @@ class TrapCam(QMainWindow):
         """
         Creates the text editor interface
         """
-        text_widget = TextEditorWidget()
-        self.text_editor = text_widget.text_editor
-        self.log_path = text_widget.log_path
+        textWidget = TextEditorWidget()
+        self.textEditor = textWidget.textEditor
+        self.logPath = textWidget.logPath
 
     def createScrollAreas(self):
         """
         Creates the scroll areas for the library interface
         """
-        self.scroll_area = QScrollArea()
-        self.scroll_area.setWidgetResizable(True)
-        self.sorting_combobox = SortBox()
-        self.filtering_combobox = FilterBox(self.database)
-        self.scroll_area.hide()
-        self.lib_layout = QVBoxLayout()
+        self.scrollArea = QScrollArea()
+        self.scrollArea.setWidgetResizable(True)
+        self.sortingCombobox = SortBox()
+        self.filteringCombobox = FilterBox(self.database)
+        self.scrollArea.hide()
+        self.libLayout = QVBoxLayout()
 
     def closeEvent(self, event):
         """
         When the window is closed, save the text in the text editor to the log file
         param event: event to close the window
         """
-        with open(self.log_path, 'w') as file:
-            file.write(self.text_editor.toPlainText())
-        # save the location of the markers
+        with open(self.logPath, 'w') as file:
+            file.write(self.textEditor.toPlainText())
         with open("Program/markers.txt", 'w') as file:
             file.write("")
             for marker in self.map.markers:
                 file.write(str(marker[0]) + "," + str(marker[1]) + "," + marker[2] + "\n")
-        # Call the parent class’s existing closeEvent
         super().closeEvent(event)
 
     def getImageFiles(self, database, sort, filter):
@@ -122,10 +115,8 @@ class TrapCam(QMainWindow):
         """
         self.cameras = database.getAllCameras()
         self.tags = database.getAllTags()
-        filter_case = {
-            # if the filter is a camera, filter case is CAMERA.
+        filterCase = {
             **dict.fromkeys(self.cameras, "CAMERA"),
-            # if the filter is a tag, filter case is TAGS
             **dict.fromkeys(self.tags, "TAGS"),
             "night": "DAYNIGHT",
             "day": "DAYNIGHT",
@@ -134,16 +125,16 @@ class TrapCam(QMainWindow):
             "Pending": "CONFIRMED",
             "No Filter": "*"
         }
-        sort_case = {
+        sortCase = {
             "Species A-Z": False,
             "Species Z-A": True,
             "Oldest to Latest": "DATETIME",
             "Highest Confidence" : "CONFIDENCE",
             "Lowest Confidence" : "CONFIDENCE"
         }
-        self.current_filter = filter_case[filter]
-        self.current_filter_value = filter
-        filterd = database.filterRows(filter_case[filter], filter)
+        self.currentFilter = filterCase[filter]
+        self.currentFilter = filter
+        filterd = database.filterRows(filterCase[filter], filter)
         if sort == "Latest to Oldest":
             sorted = database.sortRows(filterd, "DATETIME", True)
         elif sort == "Oldest to Latest":
@@ -153,8 +144,7 @@ class TrapCam(QMainWindow):
         elif sort == "Lowest Confidence":
             sorted = database.sortRows(filterd, "CONFIDENCE", False)
         else:
-            sorted = database.sortRows(filterd, "CLASSIFICATION", sort_case[sort])
-        # only keep the [id, image path, classification, confidence] from the database
+            sorted = database.sortRows(filterd, "CLASSIFICATION", sortCase[sort])
         sorted = list(map(lambda x: [x[0], x[1], x[3], x[4]], sorted))
         return sorted
 
@@ -169,14 +159,14 @@ class TrapCam(QMainWindow):
         month = months[date.month - 1]
         day = date.day
         year = date.year
-        day_suffix = "th"
+        daySuffix = "th"
         if day == 1 or day == 21 or day == 31:
-            day_suffix = "st"
+            daySuffix = "st"
         elif day == 2 or day == 22:
-            day_suffix = "nd"
+            daySuffix = "nd"
         elif day == 3 or day == 23:
-            day_suffix = "rd"
-        return month + " " + str(day) + day_suffix + ", " + str(year)
+            daySuffix = "rd"
+        return month + " " + str(day) + daySuffix + ", " + str(year)
     
 
     def createHeaderAndGrid(self, date):
@@ -189,12 +179,12 @@ class TrapCam(QMainWindow):
         header.setStyleSheet("font-weight: bold")
         header.setStyleSheet("font-size: 20px")
         header.setFixedHeight(75)
-        self.lib_layout.addWidget(header)
+        self.libLayout.addWidget(header)
         grid = QGridLayout()
-        self.lib_layout.addLayout(grid)
+        self.libLayout.addLayout(grid)
         return grid
 
-    def addImageToGrid(self, grid, image_file, row, col, ids):
+    def addImageToGrid(self, grid, imageFile, row, col, ids):
         """
         Adds an image to the grid
         param grid: grid layout
@@ -204,11 +194,9 @@ class TrapCam(QMainWindow):
         param ids: list of ids
         """
 
-        # Create a widget to hold the image and the text label
-        data_widget = Datapoint(image_file[0], image_file[1], image_file[2], image_file[3], self.scroll_area, self.database, ids, self)
+        dataWidget = Datapoint(imageFile[0], imageFile[1], imageFile[2], imageFile[3], self.scrollArea, self.database, ids, self)
 
-        # Add the widget to the grid
-        grid.addWidget(data_widget, row, col)
+        grid.addWidget(dataWidget, row, col)
         
 
     def displayImages(self, databse):
@@ -217,22 +205,19 @@ class TrapCam(QMainWindow):
         param database: database connection
         """
 
-        # Create a layout for the combo boxes
-        top_layout = QHBoxLayout()
-        top_layout.addStretch()
-        top_layout.addWidget(self.sorting_combobox)
-        top_layout.addWidget(self.filtering_combobox)
+        topLayout = QHBoxLayout()
+        topLayout.addStretch()
+        topLayout.addWidget(self.sortingCombobox)
+        topLayout.addWidget(self.filteringCombobox)
         
 
-        # Add the combo box layout to the main layout
-        self.lib_layout.addLayout(top_layout)  
-        self.lib_layout.setContentsMargins(10, 10, 0, 0)
+        self.libLayout.addLayout(topLayout)  
+        self.libLayout.setContentsMargins(10, 10, 0, 0)
         self.refreshImages()
 
-        # Create a widget to hold the library layout
         widget = QWidget()
-        widget.setLayout(self.lib_layout)
-        self.scroll_area.setWidget(widget)
+        widget.setLayout(self.libLayout)
+        self.scrollArea.setWidget(widget)
 
     
 
@@ -240,27 +225,23 @@ class TrapCam(QMainWindow):
         """
         Refreshes the images in the library
         """
-        #print("refreshing images")
-        image_files = self.getImageFiles(self.database, self.sorting_combobox.currentText(), self.filtering_combobox.currentText())
-        current_ids = list(map(lambda x: x[0], image_files))
-        #print("currently displaying: ", image_files)
+        imageFiles = self.getImageFiles(self.database, self.sortingCombobox.currentText(), self.filteringCombobox.currentText())
+        currentIds = list(map(lambda x: x[0], imageFiles))
 
-        current_date = None
+        currentDate = None
         grid = None
         row = col = 0
 
-        for image_file in image_files:
-            date = datetime.fromtimestamp(os.path.getmtime(image_file[1])).date()
+        for imageFile in imageFiles:
+            date = datetime.fromtimestamp(os.path.getmtime(imageFile[1])).date()
 
-            # Add a date header everytime the date changes
-            if date != current_date:
-                current_date = date
-                grid = self.createHeaderAndGrid(current_date)
+            if date != currentDate:
+                currentDate = date
+                grid = self.createHeaderAndGrid(currentDate)
                 row = col = 0
 
-            self.addImageToGrid(grid, image_file, row, col, current_ids)
+            self.addImageToGrid(grid, imageFile, row, col, currentIds)
 
-            # allows 3 images per row for presentation purposes
             col += 1
             if col > 2:
                 col = 0
@@ -270,34 +251,29 @@ class TrapCam(QMainWindow):
         """
         Deletes and refreshes the images in the library
         """
-        #print("refreshing images")
-        image_files = self.getImageFiles(self.database, self.sorting_combobox.currentText(), self.filtering_combobox.currentText())
-        current_ids = list(map(lambda x: x[0], image_files))
-        #print("currently displaying: ", image_files)
+        imageFiles = self.getImageFiles(self.database, self.sortingCombobox.currentText(), self.filteringCombobox.currentText())
+        currentIds = list(map(lambda x: x[0], imageFiles))
 
-        # Delete all datapoints and labels from the library
-        for widget in self.scroll_area.children()[0].children()[0].children():
+        for widget in self.scrollArea.children()[0].children()[0].children():
             if isinstance(widget, Datapoint):
                 widget.deleteLater()
             elif isinstance(widget, QLabel):
                 widget.deleteLater()
 
-        current_date = None
+        currentDate = None
         grid = None
         row = col = 0
 
-        for image_file in image_files:
-            date = datetime.fromtimestamp(os.path.getmtime(image_file[1])).date()
+        for imageFile in imageFiles:
+            date = datetime.fromtimestamp(os.path.getmtime(imageFile[1])).date()
 
-            # Add a date header everytime the date changes
-            if date != current_date:
-                current_date = date
-                grid = self.createHeaderAndGrid(current_date)
+            if date != currentDate:
+                currentDate = date
+                grid = self.createHeaderAndGrid(currentDate)
                 row = col = 0
 
-            self.addImageToGrid(grid, image_file, row, col, current_ids)
+            self.addImageToGrid(grid, imageFile, row, col, currentIds)
 
-            # TEMPORARY: allows 3 images per row for presentation purposes
             col += 1
             if col > 2:
                 col = 0
@@ -306,24 +282,24 @@ class TrapCam(QMainWindow):
     def detectRefreshImages(self):
         self.database.checkDeletes()
         self.database.detectNew("input", "cropped")
-        self.filtering_combobox.update()
+        self.filteringCombobox.update()
         self.deleteRefreshImages()
 
     def setupUI(self):
         """
         Setup the user interface
         """
-        button_widget = self.menu_buttons.button_widget
+        buttonWidget = self.menuButtons.buttonWidget
 
-        main_layout = QHBoxLayout()
-        main_layout.addWidget(button_widget)
-        main_layout.addWidget(self.scroll_area)
-        main_layout.addWidget(self.text_editor)
-        main_layout.addWidget(self.map)
+        mainLayout = QHBoxLayout()
+        mainLayout.addWidget(buttonWidget)
+        mainLayout.addWidget(self.scrollArea)
+        mainLayout.addWidget(self.textEditor)
+        mainLayout.addWidget(self.map)
 
-        central_widget = QWidget()
-        central_widget.setLayout(main_layout)
-        self.setCentralWidget(central_widget)
+        centralWidget = QWidget()
+        centralWidget.setLayout(mainLayout)
+        self.setCentralWidget(centralWidget)
 
 def connect():
     """
@@ -331,7 +307,6 @@ def connect():
     """
     myData = DataBase()
     myData.connect()
-    #print(myData)
     return myData
 
 if __name__ == "__main__":
