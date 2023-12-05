@@ -29,7 +29,6 @@ class MultiModels:
                             'fox'      : 0,
                             'rabbit'   : 0,
                             'squirrel' : 0}
-                            # Maybe groundhogs
     
     def loadDeerModel(self):
         """Loads the Deer Classification Model"""
@@ -113,7 +112,7 @@ class MultiModels:
     
     def predictDogModel(self, img):
         """
-        Predicts liklihood of a Dod
+        Predicts liklihood of a Dog
         @Param: the image to predict on
         """
         testPicture = load_img(img, target_size=(224,224))
@@ -126,7 +125,7 @@ class MultiModels:
 
     def loadCatModel(self):
         """
-        Loads the cat Classification Model
+        Loads the Cat Classification Model
         """
         self.currentModel = keras.models.load_model('../models/catModel.keras')
     
@@ -161,46 +160,6 @@ class MultiModels:
         prediction = self.currentModel.predict(pictureArray)
         # print (prediction)
         self.testResults['coyote'] = (prediction[0][0])
-    
-    # def loadWeaselModel(self):
-    #     """
-    #     Loads the Weasel Classification Model
-    #     """
-    #     self.currentModel = keras.models.load_model('../models/weaselModel.keras')
-    
-    # def predictWeaselModel(self, img):
-    #     """
-    #     Predicts liklihood of a Weasel
-    #     @Param: the image to predict on
-    #     """
-    #     testPicture = load_img(img, target_size=(224,224))
-    #     pictureArray = img_to_array(testPicture)
-    #     pictureArray = pictureArray.reshape((1, pictureArray.shape[0], pictureArray.shape[1], pictureArray.shape[2]))
-    #     pictureArray = preprocess_input(pictureArray)
-    #     prediction = self.currentModel.predict(pictureArray)
-    #     # print (prediction)
-    #     self.testResults['weasel'] = (prediction[0][0])
-
-    # def loadMouseModel(self):
-    #     """
-    #     Loads the Weasel Classification Model
-    #     """
-    #     self.currentModel = keras.models.load_model('../models/mouseModel.keras')
-
-    # # def loadAllModels()
-    
-    # def predictMouseModel(self, img):
-        """
-        Predicts liklihood of a Weasel
-        @Param: the image to predict on
-        """
-        testPicture = load_img(img, target_size=(224,224))
-        pictureArray = img_to_array(testPicture)
-        pictureArray = pictureArray.reshape((1, pictureArray.shape[0], pictureArray.shape[1], pictureArray.shape[2]))
-        pictureArray = preprocess_input(pictureArray)
-        prediction = self.currentModel.predict(pictureArray)
-        # print (prediction)
-        self.testResults['mouse'] = (prediction[0][0])
     
     def predictAll(self, img):
         """
