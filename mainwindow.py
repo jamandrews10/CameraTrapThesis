@@ -66,7 +66,6 @@ class TrapCam(QMainWindow):
         else:
             self.database.toCSV(self.currentFilter, self.currentFilterValue)
 
-
     def createMap(self):
         """
         Creates the map interface
@@ -168,7 +167,6 @@ class TrapCam(QMainWindow):
             daySuffix = "rd"
         return month + " " + str(day) + daySuffix + ", " + str(year)
     
-
     def createHeaderAndGrid(self, date):
         """
         Creates the header for the library interface
@@ -193,18 +191,14 @@ class TrapCam(QMainWindow):
         param col: column of the grid
         param ids: list of ids
         """
-
         dataWidget = Datapoint(imageFile[0], imageFile[1], imageFile[2], imageFile[3], self.scrollArea, self.database, ids, self)
-
         grid.addWidget(dataWidget, row, col)
         
-
     def displayImages(self, databse):
         """
         Displays the images in the library
         param database: database connection
         """
-
         topLayout = QHBoxLayout()
         topLayout.addStretch()
         topLayout.addWidget(self.sortingCombobox)
@@ -218,8 +212,6 @@ class TrapCam(QMainWindow):
         widget = QWidget()
         widget.setLayout(self.libLayout)
         self.scrollArea.setWidget(widget)
-
-    
 
     def refreshImages(self):
         """
@@ -280,6 +272,9 @@ class TrapCam(QMainWindow):
                 row += 1
             
     def detectRefreshImages(self):
+        """
+        Detects and refreshes the images in the library
+        """
         self.database.checkDeletes()
         self.database.detectNew("input", "cropped")
         self.filteringCombobox.update()

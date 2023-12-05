@@ -5,6 +5,9 @@ from PySide6.QtWebEngineWidgets import QWebEngineView
 from PySide6.QtWidgets import QScrollArea
 from PySide6.QtWidgets import QPushButton, QVBoxLayout, QHBoxLayout, QInputDialog
 class MapWidget(QScrollArea):
+    """
+    This class is a QScrollArea that is used to display a map of the area
+    """
     def __init__(self):
         super().__init__()
 
@@ -29,7 +32,9 @@ class MapWidget(QScrollArea):
         self.setLayout(self.stack)
         
     def addMarker(self):
-        # add the option to manually enter x,y coordinates
+        """
+        Adds a marker to the map
+        """
         text, ok = QInputDialog.getText(self, "Add Marker", "Enter a name for the marker:")
         if ok:
             x_coord, x_ok = QInputDialog.getDouble(self, "Add Marker", "Enter the x coordinate (optional):", decimals = 6)
@@ -45,7 +50,9 @@ class MapWidget(QScrollArea):
 
 
     def removeMarker(self):
-        # display the list of markers and choose one to remove
+        """
+        Removes a marker from the map
+        """
         markerNames = []
         for marker in self.markers:
             markerNames.append(marker[2])

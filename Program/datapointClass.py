@@ -3,8 +3,10 @@ from PySide6.QtGui import QPixmap
 from PySide6.QtCore import Qt, Signal
 import os
 
-# datapoint is a class that holds the pixmap and the labels for each image
 class Datapoint(QWidget):
+    """
+    This class is a widget that holds the image and the classification label for each image in the library.
+    """
     def __init__(self, id, imageFile, classification, confidence, imageWidget, database, ids, mainWindow):
         super().__init__()
         # Create a widget to hold the image and the text label
@@ -32,8 +34,10 @@ class Datapoint(QWidget):
         self.layout.addWidget(self.textLabel)
         self.layout.setAlignment(Qt.AlignCenter)
 
-    # when hovering over the label, show 2 buttons on the image. One to confirm and one to reject
     def enterEvent(self, event):
+        """
+        When the mouse enters the label, add the confirm and reject buttons to the image.
+        """
         self.confirmButton = QPushButton("Confirm")
         self.confirmButton.clicked.connect(self.confirmImage)
         self.rejectButton = QPushButton("Reject")
@@ -43,30 +47,35 @@ class Datapoint(QWidget):
         self.buttonLayout.addWidget(self.rejectButton)
         self.buttonWidget = QWidget()
         self.buttonWidget.setLayout(self.buttonLayout)
-        # add the buttons to the image
         self.layout.addWidget(self.buttonWidget)
-        # animate the label to be bigger
         self.label.setPixmap(self.originalPixmap.scaledToWidth(400, Qt.SmoothTransformation))
 
-
-    # when the mouse leaves the label, remove the buttons from the layout
     def leaveEvent(self, event):
+        """ 
+        When the mouse leaves the label, remove the confirm and reject buttons from the image.
+        """
         self.layout.removeWidget(self.buttonWidget)
         self.buttonWidget.deleteLater()
         self.label.setPixmap(self.originalPixmap.scaledToWidth(350, Qt.SmoothTransformation))
 
     def confirmImage(self):
-        # change the classification of the image to confirmed
+        """
+        Change the classification of the image to confirmed.
+        """
         self.database.changeValue(self.id, "CONFIRMED", "Confirmed")
         self.mainWindow.deleteRefreshImages()
 
     def rejectImage(self):
-        # change the classification of the image to rejected
+        """
+        Change the classification of the image to rejected.
+        """
         self.database.changeValue(self.id, "CONFIRMED", "Rejected")
         self.mainWindow.deleteRefreshImages()
 
 class ImageViewer(QMainWindow):
-    # PopUp window
+    """
+    This class is a window that displays the image that was clicked on in the library.
+    """
     def __init__(self, clickedImage, imageWidget, database, id, ids, mainWindow):
         super().__init__()
         self.database = database
@@ -75,36 +84,29 @@ class ImageViewer(QMainWindow):
         self.id = id
         self.tags = self.database.getTags(self.id)
         self.mainWindow = mainWindow
-        # get every image widget in the library
         self.imagesWidget = imageWidget.children()[0].children()[0].children()
-        # get the pixmap of the image that was clicked on
         self.clickedImage = clickedImage
-        #create a QstackedWidget to hold 10 previous images and 10 next images
         self.imageStack = QStackedWidget() 
         self.currentIndex = 0
         self.index = 0
         for widget in self.imagesWidget:
             if isinstance(widget, Datapoint):
-                # Create a new QLabel
                 labelCopy = QLabel()
-                # Set its pixmap to be the same as the original label
                 labelCopy.setPixmap(widget.originalPixmap.scaledToWidth(800, Qt.SmoothTransformation))
-                # add a copy of the label to the stack
                 self.imageStack.addWidget(labelCopy)
-                # if the label title is the same as the clicked image, set the current index to the index of the label 
                 if widget.title == self.clickedImage:
-                    # set the index of the stack to the index of the pixmap that was clicked on
                     self.currentIndex = self.index
                 self.index += 1
         
         self.initUI()
 
     def initUI(self):
-        # Create the image viewer
+        """
+        Create the image viewer window
+        """
         self.setWindowTitle("Image Viewer")
         self.setGeometry(100, 100, 800, 600)
 
-        # Create the buttons
         self.yesButton = QPushButton("Yes")
         self.yesButton.clicked.connect(self.confirmImage)
         self.noButton = QPushButton("No animal (false positive))")
@@ -117,21 +119,18 @@ class ImageViewer(QMainWindow):
         self.existingTagButton.clicked.connect(self.addExistingTag)
         self.deleteTagButton = QPushButton("Delete Tag")
         self.deleteTagButton.clicked.connect(self.deleteTag)
-        # make a drop down list titled not quite and add options
+
         self.notQuiteList = QComboBox()
         self.notQuiteList.addItems(["Not quite", "deer", "squirrel", "possum", "fox", "mouse", "skunk", "raccoon", "cat", "dog", "bird", "coyote", "rabbit", "weasel", "groundhog"])
         self.notQuiteList.currentTextChanged.connect(self.notQuiteImage)
 
-        # Create the image layout
         self.imageStack.setCurrentIndex(self.currentIndex)
 
-        # create nav buttons
         self.nextButton = QPushButton("Next")
         self.nextButton.clicked.connect(self.nextImage)
         self.prevButton = QPushButton("Previous")
         self.prevButton.clicked.connect(self.prevImage)
 
-        # create the layout
         self.imageLayout = QHBoxLayout()
         spacer1 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
         spacer2 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
@@ -142,14 +141,12 @@ class ImageViewer(QMainWindow):
         self.imageLayout.addSpacerItem(spacer2)
         self.imageLayout.addWidget(self.nextButton)
 
-        # Create a label for the classification
         self.classificationLabel = QLabel()
         self.classification = self.database.filterRows("ID", self.currentId)[0][3]
         self.confidence = self.database.filterRows("ID", self.currentId)[0][4]
         self.confirmed = self.database.filterRows("ID", self.currentId)[0][5]
         self.classificationLabel.setText(self.confirmed + " " + self.classification.capitalize() + " (" + str(round(float(self.confidence) * 100))+ "%)" + " " + str(self.tags))
 
-        # Create the button layout
         self.buttonLayout = QHBoxLayout()
         self.buttonLayout.addWidget(self.yesButton)
         self.buttonLayout.addWidget(self.noButton)
@@ -164,9 +161,6 @@ class ImageViewer(QMainWindow):
         self.secondaryButtonWidget = QWidget()
         self.secondaryButtonWidget.setLayout(self.secondaryButtonLayout)
         
-
-
-        # Add the widgets to the window
         self.layout = QVBoxLayout()
         self.layout.addLayout(self.imageLayout)
         self.layout.addWidget(self.classificationLabel)
@@ -176,43 +170,51 @@ class ImageViewer(QMainWindow):
         self.widget.setLayout(self.layout)
         self.setCentralWidget(self.widget)
 
-    # When the window is closed, delete and refresh images in the library
     def closeEvent(self, event):
+        """
+        When the window is closed, delete and refresh images in the library
+        """
         self.mainWindow.deleteRefreshImages()
         super().closeEvent(event)
 
     def confirmImage(self):
-        # change the classification of the image to confirmed
+        """
+        Change the classification of the image to confirmed
+        """
         self.database.changeValue(self.currentId, "CONFIRMED", "Confirmed")
         self.updateClassification()
 
     def rejectImage(self):
-        # change the classification of the image to rejected
+        """
+        Change the classification of the image to rejected
+        """
         self.database.changeValue(self.currentId, "CONFIRMED", "Rejected")
         self.updateClassification()
 
     def notQuiteImage(self):
-        # if the classification is not quite, change the classification to the selected option and confirm it
+        """
+        Change the classification of the image
+        """
         if self.notQuiteList.currentText() != "Not quite":
             self.database.changeValue(self.currentId, "CLASSIFICATION", self.notQuiteList.currentText())
             self.database.changeValue(self.currentId, "CONFIRMED", "Confirmed")
             self.updateClassification()
-            # reset the combo box to not quite
             self.notQuiteList.setCurrentIndex(0)
     
     def deleteImage(self):
-        # get the row of the image from the database
+        """
+        Delete the image from the library and directory
+        """
         row = self.database.getRow(self.currentId)
-        # delete the image and cropped image from the directory
         os.remove(row[1])
         os.remove(row[2])
-        # delete the image from the database
         self.database.deleteRow(self.currentId)
-        # close the image viewer
         self.close()
     
     def addTag(self):
-        # open a QInputDialog box to get the tag from the user
+        """
+        Add a tag to the image
+        """
         tag, ok = QInputDialog.getText(self, "Add New Tag", "Enter a tag:")
         if ok:
             self.database.addTag(self.currentId, tag)
@@ -220,9 +222,10 @@ class ImageViewer(QMainWindow):
             self.updateClassification()
 
     def addExistingTag(self):
-        # get the list of tags from the database
+        """
+        Add an existing tag to the image
+        """
         tags = self.database.getAllTags()
-        # open a QInputDialog box to get the tag from the user
         tag, ok = QInputDialog.getItem(self, "Add Existing Tag", "Select a tag to add:", tags)
         if ok:
             self.database.addTag(self.currentId, tag)
@@ -230,9 +233,10 @@ class ImageViewer(QMainWindow):
             self.updateClassification()
 
     def deleteTag(self):
-        # get the list of tags from the database
+        """
+        Delete a tag from the image
+        """
         tags = self.database.getTags(self.currentId)
-        # open a QInputDialog box to get the tag from the user
         tag, ok = QInputDialog.getItem(self, "Delete Tag", "Select a tag to delete:", tags)
         if ok:
             self.database.deleteTag(self.currentId, tag)
@@ -240,7 +244,9 @@ class ImageViewer(QMainWindow):
             self.updateClassification()
 
     def nextImage(self):
-        # if there is a next image, increment the index and show the next image
+        """
+        If there is a next image, increment the index and show the next image
+        """
         if self.currentIndex < self.imageStack.count() - 1:
             self.currentIndex += 1
             self.imageStack.setCurrentIndex(self.currentIndex)
@@ -249,7 +255,9 @@ class ImageViewer(QMainWindow):
             self.updateClassification()
             
     def prevImage(self):
-        # if there is a previous image, decrement the index and show the previous image
+        """
+        If there is a previous image, decrement the index and show the previous image
+        """
         if self.currentIndex > 0:
             self.currentIndex -= 1
             self.imageStack.setCurrentIndex(self.currentIndex)
@@ -258,12 +266,20 @@ class ImageViewer(QMainWindow):
             self.updateClassification()
 
     def updateClassification(self):
+        """
+        Update the classification label
+        """
         self.classification = self.database.filterRows("ID", self.currentId)[0][3]
         self.confirmed = self.database.filterRows("ID", self.currentId)[0][5]
         self.tags = self.database.getTags(self.currentId)
         self.classificationLabel.setText(self.confirmed + " " + self.classification.capitalize() + " (" + str(round(float(self.confidence) * 100))+ "%)" + " " + str(self.tags))
 
     def keyPressEvent(self, event):
+        """
+        When the right arrow key is pressed, show the next image
+        When the left arrow key is pressed, show the previous image
+        When the escape key is pressed, close the window
+        """
         if event.key() == Qt.Key_Escape:
             self.close()
         if event.key() == Qt.Key_Right:
@@ -274,7 +290,9 @@ class ImageViewer(QMainWindow):
 
 
 class ClickableLabel(QLabel):
-    # This class is used to create a clickable label
+    """
+    This class is a label that emits a signal when it is clicked on.
+    """
     clicked = Signal()
 
     def __init__(self, clickedWidget, imagesWidget, database, id, classification, ids, mainWindow, parent=None):
@@ -287,12 +305,16 @@ class ClickableLabel(QLabel):
         self.classification = classification
         self.mainWindow = mainWindow
         
-    # when mouse is pressed, call displayImage
     def mousePressEvent(self, event):
+        """
+        When the label is clicked on, emit the signal and display the image in the image viewer
+        """
         self.clicked.emit()
         self.displayImage(self.clickedImage, self.imagesWidget)
 
-    # when clicking on the label, make an instance of the image viewer
     def displayImage(self, clickedImage, imagesWidget):
+        """
+        Display the image in the image viewer
+        """
         self.imageViewer = ImageViewer(clickedImage, imagesWidget, self.database, self.id, self.ids, self.mainWindow)
         self.imageViewer.show()
