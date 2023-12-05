@@ -6,6 +6,7 @@ import datetime
 import os
 import csv
 from Program.my_run_detector_batch import *
+from md_visualization import visualize_detector_output
 from Program.modelClass import MultiModels
 
 class DataBase:
@@ -39,9 +40,6 @@ class DataBase:
         """
         values[-1] = ','.join(values[-1])
         values = [None]+values
-        # Might actually want to put this code in the input function
-        # for img in values:
-        #     values.insert(datetime.fromtimestamp(os.path.getmtime(img[1])).date())
         conn = self.connect()
         conn.execute("INSERT into Paths Values ("+("?,"*len(values))[:-1]+")", values)
         conn.commit()
@@ -196,7 +194,6 @@ class DataBase:
     def detectNew(self,input_path, cropped_path):
         conn = self.connect()
         
-        # cameraNames = []
         cameraPaths = [f.path for f in os.scandir(input_path) if f.is_dir()]
         for cameraPath in cameraPaths:
             imageQueue = []
@@ -214,7 +211,7 @@ class DataBase:
                 print("No new images for", cameraPath)
                 continue
 
-            detector_file = 'Program/md_v5a.0.0.pt'
+            detector_file = 'Models/md_v5a.0.0.pt'
             output_file='Program/newDetections.json'
             threshold=0.5                   #This could be changed later if we want to implement a sensitivity slider
 
@@ -231,6 +228,19 @@ class DataBase:
             self.cropCamera(output_file,croppedCameraPath,cameraPath,threshold,imageQueue)
             print("Done Cropping for", cameraPath)
 
+            print("adding bboxs for", cameraPath)
+            visualize_detector_output.visualize_detector_output(detector_output_path = "Program/newDetections.json",
+                              out_dir = ".",
+                              images_dir = ".",
+                              is_azure= False,
+                              confidence_threshold = 0.15,
+                              sample = -1,
+                              output_image_width = 700,
+                              random_seed = None,
+                              render_detections_only = False,
+                              classification_confidence_threshold = 0.5,
+                              html_output_file=None,
+                              html_output_options=None)
 
             #Now run our classification
             uncropped_files = sorted(imageQueue)
@@ -388,8 +398,8 @@ class DataBase:
     # print(myData)
     # myData.toCSV(filter = "DAYNIGHT", filterValue="night")
 
-    # myData.detectNew("c:/input","c:/croppedImgs")
-    # print(myData)
+#     myData.detectNew("input","cropped")
+#     # print(myData)
 
 
 # if __name__ == "__main__":

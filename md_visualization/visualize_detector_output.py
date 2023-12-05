@@ -167,9 +167,10 @@ def visualize_detector_output(detector_output_path: str,
             confidence_threshold=confidence_threshold,
             classification_confidence_threshold=classification_confidence_threshold)
 
-        for char in ['/', '\\', ':']:
-            image_id = image_id.replace(char, '~')
-        annotated_img_path = os.path.join(out_dir, f'anno_{image_id}')
+        # for char in ['/', '\\', ':']:
+        #     image_id = image_id.replace(char, '~')
+        # annotated_img_path = os.path.join(out_dir, f'anno_{image_id}')
+        annotated_img_path = os.path.join(out_dir,image_id)
         annotated_img_paths.append(annotated_img_path)
         image.save(annotated_img_path)
         num_saved += 1
