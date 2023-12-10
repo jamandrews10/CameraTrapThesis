@@ -47,7 +47,7 @@ pip install tensorflow
 ```
 This package must be installed seperate from the others.
 
-7. Next, download the models from this [google drive link](https://drive.google.com/drive/folders/1-l_WhgWwZQCCR9G0dE11eaKaDSrQJxfj). Put these models in a folder called "models" in your current directory.
+7. Next, download the models folder from this [google drive link](https://drive.google.com/drive/folders/12odkvYKWmXa6C3s_bqRfQz-csYX4zZ6a). Put this folder in your current directory.
 
 1. Now run:
 ```bash
